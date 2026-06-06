@@ -1,0 +1,21 @@
+# ── Private Engine (lokal, nicht öffentlich) ──
+app/
+src/
+
+# Kundendaten & Chat-Exports
+Input/
+input/
+*.zip
+
+# Build & Dependencies
+node_modules/
+package.json
+package-lock.json
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.vscode/
+.idea/
