@@ -330,13 +330,21 @@ h3,
 }
 
 .tally-embed {
-  margin-top: 2rem;
+  width: 100%;
+  max-width: 32rem;
+  margin: 2rem auto 0;
   min-height: 420px;
   border-radius: var(--radius);
   overflow: hidden;
   background: #fff;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
+}
+
+.tally-embed iframe {
+  display: block;
+  width: 100%;
+  max-width: 32rem;
 }
 
 .tally-placeholder {
