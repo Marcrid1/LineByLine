@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="So exportiert ihr euren WhatsApp-Chat für euer Line by Line Poster – Anleitung für iPhone und Android."
+    />
+    <title>Bestellen – Line by Line</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container inner">
+        <a class="brand" href="./">
+          <strong>Line by Line</strong>
+        </a>
+        <nav class="nav" aria-label="Hauptnavigation">
+          <a href="./">Startseite</a>
+          <a class="btn btn-primary" href="#bestellen">Zum Formular</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="section order-page-intro">
+        <div class="container">
+          <span class="eyebrow">Schritt 1 von 2</span>
+          <h1 class="section-title" style="text-align: left; margin-bottom: 0.75rem">
+            Chat exportieren
+          </h1>
+          <p class="section-intro" style="text-align: left; margin: 0 0 2rem; max-width: 40rem">
+            Bevor ihr bestellt, exportiert euren WhatsApp-Chat als ZIP-Datei.
+            Die brauchen wir für euer Poster. Die Anleitung dauert nur eine
+            Minute.
+          </p>
+
+          <div class="export-tip">
+            <strong>Tipp:</strong> „Ohne Medien“ reicht für Statistiken, Emojis
+            und Texte. „Mit Medien“ nur wählen, wenn ihr Fotos und Videos im
+            Export braucht – die Datei wird dann deutlich größer.
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt">
+        <div class="container">
+          <h2 class="section-title">Anleitung nach Gerät</h2>
+          <div class="export-grid">
+            <article class="export-card">
+              <div class="export-card-head">
+                <span class="export-platform">iOS</span>
+                <h3>iPhone (Apple)</h3>
+              </div>
+              <ol class="export-steps">
+                <li>WhatsApp öffnen und den gewünschten Chat antippen.</li>
+                <li>
+                  Oben auf den Chat-Namen tippen (bei Gruppen: Gruppenname).
+                </li>
+                <li>
+                  Nach unten scrollen und <strong>„Chat exportieren“</strong>
+                  wählen.
+                </li>
+                <li>
+                  <strong>„Ohne Medien“</strong> oder
+                  <strong>„Medien anhängen“</strong> auswählen.
+                </li>
+                <li>
+                  Die Datei speichern – z. B. in „Dateien“, per AirDrop auf den
+                  Mac oder per E-Mail an euch selbst schicken.
+                </li>
+                <li>
+                  Am Computer oder Handy prüfen: Es liegt eine
+                  <strong>.zip-Datei</strong> vor (oft mit dem Chat-Namen im
+                  Dateinamen).
+                </li>
+              </ol>
+            </article>
+
+            <article class="export-card">
+              <div class="export-card-head">
+                <span class="export-platform export-platform-wide">Android</span>
+                <h3>Android</h3>
+              </div>
+              <ol class="export-steps">
+                <li>WhatsApp öffnen und den gewünschten Chat antippen.</li>
+                <li>
+                  Oben rechts auf das <strong>Menü</strong> (⋮) tippen.
+                </li>
+                <li>
+                  <strong>„Mehr“</strong> → <strong>„Chat exportieren“</strong>
+                  wählen.
+                </li>
+                <li>
+                  <strong>„Ohne Medien“</strong> oder
+                  <strong>„Mit Medien“</strong> auswählen.
+                </li>
+                <li>
+                  Ziel wählen – z. B. Google Drive, E-Mail oder „Dateien“ auf
+                  dem Gerät.
+                </li>
+                <li>
+                  Die gespeicherte <strong>.zip-Datei</strong> für die
+                  Bestellung bereithalten.
+                </li>
+              </ol>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section order-section" id="bestellen">
+        <div class="container">
+          <span class="eyebrow">Schritt 2 von 2</span>
+          <h2 class="section-title">Jetzt bestellen</h2>
+          <p class="section-intro">
+            Habt ihr die ZIP-Datei? Dann ladet sie hier hoch, tragt eure Namen
+            ein und schließt die Bestellung ab. Bezahlung und Upload erfolgen
+            über Tally.
+          </p>
+          <a
+            class="btn btn-primary"
+            href="https://tally.so/r/DEIN_FORMULAR"
+            id="tally-fallback-link"
+          >
+            Zum Bestellformular
+          </a>
+
+          <!-- Tally: Ersetze DEIN_FORMULAR durch deine echte Formular-ID aus tally.so -->
+          <div class="tally-embed" id="tally-embed">
+            <iframe
+              data-tally-src="https://tally.so/embed/DEIN_FORMULAR?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+              loading="lazy"
+              width="100%"
+              height="420"
+              frameborder="0"
+              marginheight="0"
+              marginwidth="0"
+              title="Line by Line Bestellformular"
+            ></iframe>
+          </div>
+          <noscript>
+            <p class="section-intro">
+              JavaScript ist deaktiviert. Bitte nutze den Link „Zum
+              Bestellformular“ oben.
+            </p>
+          </noscript>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand" href="./">
+            <strong>Line by Line</strong>
+          </a>
+          <p class="footer-note">
+            © <span id="year"></span> Line by Line. Alle Rechte vorbehalten.
+          </p>
+        </div>
+        <nav class="footer-links" aria-label="Rechtliches">
+          <a href="./impressum.html">Impressum</a>
+          <a href="./datenschutz.html">Datenschutz</a>
+          <a href="./agb.html">AGB</a>
+          <a href="./widerruf.html">Widerruf</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    <script async src="https://tally.so/widgets/embed.js"></script>
+  </body>
+</html>

@@ -26,7 +26,7 @@
           <a class="hide-mobile" href="#produkt">Produkt</a>
           <a class="hide-mobile" href="#ablauf">So funktioniert's</a>
           <a class="hide-mobile" href="#datenschutz">Datenschutz</a>
-          <a class="btn btn-primary" href="#bestellen">Jetzt bestellen</a>
+          <a class="btn btn-primary" href="./bestellen.html">Jetzt bestellen</a>
         </nav>
       </div>
     </header>
@@ -44,7 +44,7 @@
               eurem persönlichen Stil.
             </p>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="#bestellen">Poster bestellen</a>
+              <a class="btn btn-primary" href="./bestellen.html">Poster bestellen</a>
               <a class="btn btn-secondary" href="#produkt">Beispiel ansehen</a>
             </div>
           </div>
@@ -114,8 +114,8 @@
             <article class="step">
               <h3>Bestellung abschließen</h3>
               <p>
-                Über unser Bestellformular ladet ihr die ZIP-Datei hoch und
-                gebt Namen sowie Wünsche an.
+                Auf der Bestellseite findet ihr die Export-Anleitung – danach
+                ladet ihr die ZIP-Datei hoch und gebt Namen sowie Wünsche an.
               </p>
             </article>
             <article class="step">
@@ -159,36 +159,14 @@
         </div>
       </section>
 
-      <section class="section order-section" id="bestellen">
-        <div class="container">
-          <h2 class="section-title">Jetzt bestellen</h2>
+      <section class="section order-section">
+        <div class="container" style="text-align: center">
+          <h2 class="section-title">Bereit für euer Poster?</h2>
           <p class="section-intro">
-            Wählt euer Poster über unser sicheres Bestellformular. Bezahlung
-            und Upload erfolgen bequem über Tally.
+            Auf der Bestellseite erklären wir Schritt für Schritt, wie ihr den
+            WhatsApp-Export erstellt – danach geht es direkt zum Formular.
           </p>
-          <a class="btn btn-primary" href="https://tally.so/r/DEIN_FORMULAR" id="tally-fallback-link">
-            Zum Bestellformular
-          </a>
-
-          <!-- Tally: Ersetze DEIN_FORMULAR durch deine echte Formular-ID aus tally.so -->
-          <div class="tally-embed" id="tally-embed">
-            <iframe
-              data-tally-src="https://tally.so/embed/DEIN_FORMULAR?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-              loading="lazy"
-              width="100%"
-              height="420"
-              frameborder="0"
-              marginheight="0"
-              marginwidth="0"
-              title="Line by Line Bestellformular"
-            ></iframe>
-          </div>
-          <noscript>
-            <p class="section-intro">
-              JavaScript ist deaktiviert. Bitte nutze den Link „Zum
-              Bestellformular“ oben.
-            </p>
-          </noscript>
+          <a class="btn btn-primary" href="./bestellen.html">Zur Bestellseite</a>
         </div>
       </section>
     </main>
@@ -215,6 +193,5 @@
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
-    <script async src="https://tally.so/widgets/embed.js"></script>
   </body>
 </html>
