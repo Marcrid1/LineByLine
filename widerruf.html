@@ -3,13 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="./assets/favicon.png" />
     <title>Widerrufsbelehrung – Lines by Lines</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <script src="./assets/fonts-head.js"></script>
     <link rel="stylesheet" href="./assets/site.css" />
   </head>
   <body>
@@ -18,8 +15,8 @@
         <a class="brand" href="./">
           <strong>Lines by Lines</strong>
         </a>
-        <nav class="nav">
-          <a href="./">Startseite</a>
+        <nav class="nav" aria-label="Hauptnavigation">
+          <a class="btn btn-primary" href="./">Startseite</a>
         </nav>
       </div>
     </header>
@@ -42,9 +39,11 @@
           Um Ihr Widerrufsrecht auszuüben, müssen Sie uns
         </p>
         <p>
-          <span class="placeholder">[Name / Firma]</span><br />
-          <span class="placeholder">[Adresse]</span><br />
-          E-Mail: <span class="placeholder">[E-Mail-Adresse]</span>
+          Marc John<br />
+          Am Burgrain 5<br />
+          99334 Holzhausen<br />
+          E-Mail:
+          <a href="mailto:marcjohn1106@gmail.com">marcjohn1106@gmail.com</a>
         </p>
         <p>
           mittels einer eindeutigen Erklärung (z. B. per E-Mail) über Ihren
@@ -90,7 +89,8 @@
         </p>
         <p>
           An<br />
-          <span class="placeholder">[Name / Firma, Adresse, E-Mail]</span>
+          Marc John, Am Burgrain 5, 99334 Holzhausen,
+          <a href="mailto:marcjohn1106@gmail.com">marcjohn1106@gmail.com</a>
         </p>
         <p>
           Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen
@@ -106,14 +106,27 @@
     </main>
 
     <footer class="site-footer">
-      <div class="container">
-        <nav class="footer-links">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand" href="./">
+            <strong>Lines by Lines</strong>
+          </a>
+          <p class="footer-note">
+            © <span id="year"></span> Lines by Lines. Alle Rechte vorbehalten.
+          </p>
+        </div>
+        <nav class="footer-links" aria-label="Rechtliches">
           <a href="./impressum.html">Impressum</a>
           <a href="./datenschutz.html">Datenschutz</a>
           <a href="./agb.html">AGB</a>
           <a href="./widerruf.html">Widerruf</a>
+          <a href="#" data-cookie-settings>Cookie-Einstellungen</a>
         </nav>
       </div>
     </footer>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    <script src="./assets/cookie-consent.js" defer></script>
   </body>
 </html>

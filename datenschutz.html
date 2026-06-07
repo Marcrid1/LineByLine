@@ -3,13 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="./assets/favicon.png" />
     <title>Datenschutzerklärung – Lines by Lines</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <script src="./assets/fonts-head.js"></script>
     <link rel="stylesheet" href="./assets/site.css" />
   </head>
   <body>
@@ -18,8 +15,8 @@
         <a class="brand" href="./">
           <strong>Lines by Lines</strong>
         </a>
-        <nav class="nav">
-          <a href="./">Startseite</a>
+        <nav class="nav" aria-label="Hauptnavigation">
+          <a class="btn btn-primary" href="./">Startseite</a>
         </nav>
       </div>
     </header>
@@ -27,12 +24,16 @@
     <main class="legal-page">
       <div class="container">
         <h1>Datenschutzerklärung</h1>
-        <p class="legal-meta">Stand: <span class="placeholder">[Datum]</span></p>
+        <p class="legal-meta">Stand: 7. Juni 2026</p>
 
         <h2>1. Verantwortlicher</h2>
         <p>
           Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br />
-          <span class="placeholder">[Name / Firma, Adresse, E-Mail – siehe Impressum]</span>
+          Marc John<br />
+          Am Burgrain 5<br />
+          99334 Holzhausen<br />
+          E-Mail:
+          <a href="mailto:marcjohn1106@gmail.com">marcjohn1106@gmail.com</a>
         </p>
 
         <h2>2. Überblick</h2>
@@ -41,8 +42,45 @@
           Erklärung informiert Sie darüber, welche Daten wir bei der Nutzung
           von Lines by Lines verarbeiten und zu welchem Zweck.
         </p>
+        <p>
+          Kurz zusammengefasst: Die öffentliche Website ist statisch gehostet.
+          Erst wenn Sie bestellen, werden Name, E-Mail und Ihr WhatsApp-Export
+          an unseren Bestell-Server übertragen, dort verarbeitet und anschließend
+          – soweit nicht mehr erforderlich – wieder gelöscht.
+        </p>
 
-        <h2>3. Website (statische Inhalte)</h2>
+        <h2>3. Cookies und lokale Speicherung</h2>
+        <p>
+          Beim ersten Besuch erscheint ein Cookie-Hinweis. Sie können zwischen
+          „Alle akzeptieren“, „Nur notwendige“ und individuellen Einstellungen
+          wählen. Ihre Auswahl speichern wir im lokalen Speicher Ihres Browsers
+          (<code>localStorage</code>, Schlüssel
+          <code>linesByLinesCookieConsent</code>) – Rechtsgrundlage Art. 6 Abs.
+          1 lit. a DSGVO bzw. § 25 Abs. 2 Nr. 2 TTDSG (Einwilligung) für
+          optionale Dienste.
+        </p>
+        <p>Technisch notwendige Speicherung umfasst insbesondere:</p>
+        <ul>
+          <li>
+            <strong>Cookie-Einstellungen:</strong> Merken Ihrer Einwilligung,
+            damit der Hinweis nicht bei jedem Besuch erneut erscheint.
+          </li>
+          <li>
+            <strong>Bestellablauf:</strong> Auf der Bestellseite speichern wir
+            vorübergehend die laufende Bestellnummer im Session-Speicher
+            (<code>sessionStorage</code>, Schlüssel
+            <code>linesByLinesOrderId</code>), damit Sie nach einer
+            Unterbrechung zur Zahlung zurückkehren können. Rechtsgrundlage ist
+            Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).
+          </li>
+        </ul>
+        <p>
+          Wir setzen derzeit <strong>keine Analyse- oder Marketing-Cookies</strong>
+          ein. Ihre Einstellungen können Sie jederzeit über
+          „Cookie-Einstellungen“ im Footer ändern.
+        </p>
+
+        <h2>4. Website (statische Inhalte)</h2>
         <p>
           Diese öffentliche Website enthält ausschließlich statische Informationen
           zur Produktbeschreibung und zum Bestellprozess. Auf der Website findet
@@ -50,31 +88,107 @@
         </p>
         <p>
           Beim Aufruf können technische Dienste von Drittanbietern geladen werden
-          (z. B. Google Fonts). Dabei kann Ihre IP-Adresse an diese Anbieter
-          übermittelt werden.
+          (z. B. Google Fonts – nur nach Ihrer Einwilligung). Dabei kann Ihre
+          IP-Adresse an diese Anbieter übermittelt werden.
         </p>
 
-        <h2>4. Bestellung und Zahlung</h2>
+        <h2>5. Bestellung, Chat-Verarbeitung und Lieferung</h2>
         <p>
-          Bestellungen erfolgen über unsere Seite
-          <a href="./bestellen.html">bestellen.html</a>. Dabei übermitteln Sie
-          Name, E-Mail-Adresse und Ihren WhatsApp-Chat-Export (ZIP) an unseren
-          Bestell-Server zur Verarbeitung und Poster-Erstellung.
+          Bestellungen erfolgen über
+          <a href="./bestellen.html">bestellen.html</a>. Die öffentliche Website
+          auf GitHub Pages dient nur der Information und leitet Sie zur Bestellung
+          weiter; die Verarbeitung Ihres Chats findet dort nicht statt.
         </p>
         <p>
-          Die Zahlung wird über <strong>Stripe</strong> (Stripe Payments Europe,
-          Ltd., Irland) abgewickelt. Zahlungsdaten werden direkt an Stripe
-          übermittelt; wir speichern keine vollständigen Zahlungskartendaten.
+          Für Bestellung, Poster-Erstellung, Vorschau und Zahlungsabwicklung
+          verbinden Sie sich mit <strong>unserem Bestell-Server</strong>
+          (betrieben durch den Verantwortlichen, erreichbar über eine gesicherte
+          HTTPS-Verbindung). Dabei übermitteln Sie:
+        </p>
+        <ul>
+          <li>Vor- und Nachname</li>
+          <li>E-Mail-Adresse</li>
+          <li>Ihren WhatsApp-Chat-Export als <strong>.zip-Datei</strong> (max.
+            10&nbsp;MB)</li>
+        </ul>
+        <p>
+          Aus dem Chat-Export werden automatisch Statistiken und Textinhalte
+          ausgewertet, um Ihr personalisiertes A4-Poster zu erstellen (PDF und
+          HTML). Vor der Zahlung sehen Sie eine <strong>Vorschau</strong> des
+          Posters; sensible Bereiche sind darin absichtlich unscharf dargestellt.
         </p>
         <p>
-          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).
-          Weitere Informationen:
+          <strong>Speicherung der ZIP-Datei:</strong> Die hochgeladene ZIP wird
+          zunächst im temporären Systemverzeichnis des Bestell-Servers
+          gespeichert (<code>%TEMP%/lines-by-lines-orders/</code> bzw. vergleichbarer
+          Temp-Pfad). Nach erfolgreicher oder fehlgeschlagener Verarbeitung wird
+          die ZIP-Datei <strong>regelmäßig automatisch gelöscht</strong>. Eine
+          dauerhafte Archivierung des Chat-Exports erfolgt nicht.
+        </p>
+        <p>
+          <strong>Erstellte Bestelldaten:</strong> Für die Auftragsabwicklung
+          speichern wir auf dem Bestell-Server unter anderem:
+        </p>
+        <ul>
+          <li>
+            Bestellmetadaten (Bestellnummer, Name, E-Mail, Status, Zeitstempel,
+            Zahlungs-Referenz) in einer internen Bestellliste
+          </li>
+          <li>
+            das fertige Poster (PDF/HTML), eine Statistikdatei
+            (<code>ergebnis.json</code>) und eine Vorschau-Grafik im
+            Ausgabeordner der jeweiligen Bestellung
+          </li>
+        </ul>
+        <p>
+          In der Statistikdatei und im Poster können <strong>aus dem Chat
+          abgeleitete Inhalte</strong> enthalten sein (z.&nbsp;B. Häufigkeiten,
+          erste Nachrichten, Wortwolke, Diagramme). Der vollständige
+          Chat-Export bleibt nach der Verarbeitung nicht gespeichert.
+        </p>
+        <p>
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung bzw.
+          vorvertragliche Maßnahmen auf Ihre Anfrage hin).
+        </p>
+
+        <h2>6. Zahlung (Stripe)</h2>
+        <p>
+          Die Zahlung erfolgt über den Zahlungsdienstleister
+          <strong>Stripe</strong> (Stripe Payments Europe, Ltd., 1 Grand Canal
+          Street Lower, Grand Canal Dock, Dublin, Irland). Dazu leiten wir Sie nach
+          der Poster-Erstellung zur Stripe-Checkout-Seite weiter.
+        </p>
+        <p>
+          Zahlungsdaten (z.&nbsp;B. Kartendaten) werden <strong>direkt an
+          Stripe</strong> übermittelt; wir speichern keine vollständigen
+          Zahlungskartendaten. Stripe kann uns eine Transaktions- bzw.
+          Sitzungskennung übermitteln, um die Zahlung der Bestellung zuzuordnen.
+        </p>
+        <p>
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Weitere Informationen:
           <a href="https://stripe.com/de/privacy" target="_blank" rel="noopener noreferrer"
             >Stripe Datenschutz</a
           >.
         </p>
 
-        <h2>5. Hosting (GitHub Pages)</h2>
+        <h2>7. E-Mail-Versand</h2>
+        <p>
+          Nach erfolgreicher Zahlung senden wir Ihnen das fertige Poster per
+          E-Mail als PDF-Anhang. Der Versand erfolgt über unseren konfigurierten
+          SMTP-Dienst (derzeit Google SMTP / Gmail-Infrastruktur). Dabei
+          verarbeitet der Mail-Dienstleister die übermittelten E-Mail-Daten
+          (Empfängeradresse, Betreff, Anhang) als Auftragsverarbeiter bzw.
+          Dienstleister im Rahmen seines eigenen Datenschutzes.
+        </p>
+        <p>
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Informationen zu
+          Google:
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"
+            >Google Datenschutz</a
+          >.
+        </p>
+
+        <h2>8. Hosting der Website (GitHub Pages)</h2>
         <p>
           Diese Website wird über GitHub Pages gehostet (GitHub, Inc., USA).
           Beim Aufruf der Seite werden technisch notwendige Daten (z. B.
@@ -86,27 +200,57 @@
           an einem sicheren und stabilen Webangebot).
         </p>
 
-        <h2>6. Google Fonts</h2>
+        <h2>9. Google Fonts (optional)</h2>
         <p>
-          Zur einheitlichen Darstellung laden wir Schriftarten von Google Fonts.
-          Dabei kann Ihre IP-Adresse an Google Ireland Limited bzw. Google LLC
-          (USA) übermittelt werden.
+          Zur einheitlichen Darstellung können wir – nur mit Ihrer Einwilligung
+          über den Cookie-Hinweis – Schriftarten von Google Fonts laden. Dabei
+          kann Ihre IP-Adresse an Google Ireland Limited bzw. Google LLC (USA)
+          übermittelt werden.
         </p>
         <p>
-          Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Weitere Informationen:
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. a DSGVO. Ohne Einwilligung
+          nutzen wir Systemschriftarten. Weitere Informationen:
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"
             >Google Datenschutz</a
           >.
         </p>
 
-        <h2>7. Speicherdauer</h2>
+        <h2>10. Speicherdauer und Löschung</h2>
+        <p>Im Überblick gelten folgende Fristen:</p>
+        <ul>
+          <li>
+            <strong>WhatsApp-ZIP:</strong> Löschung nach Abschluss der
+            Verarbeitung auf dem Bestell-Server (in der Regel unmittelbar danach).
+          </li>
+          <li>
+            <strong>Poster, Statistik und Vorschau:</strong> Speicherung, solange
+            dies für die Bestellabwicklung, erneute Zahlung oder den E-Mail-Versand
+            erforderlich ist. Nach erfolgreichem Versand können die zugehörigen
+            Ausgabedaten gelöscht werden.
+          </li>
+          <li>
+            <strong>Bestellmetadaten</strong> (Name, E-Mail, Bestellstatus):
+            Speicherung für die Dauer der Vertragserfüllung sowie darüber hinaus
+            nur, soweit gesetzliche Aufbewahrungsfristen (z.&nbsp;B. steuer- oder
+            handelsrechtlich) bestehen oder Rechtsansprüche geltend gemacht werden
+            können.
+          </li>
+          <li>
+            <strong>Cookie-Einstellungen</strong> im Browser: bis Sie Ihre
+            Einwilligung widerrufen oder die Browser-Daten löschen.
+          </li>
+          <li>
+            <strong>Session-Speicher</strong> auf der Bestellseite: bis Sie den
+            Browser-Tab schließen oder die Sitzung beenden.
+          </li>
+        </ul>
         <p>
-          Personenbezogene Daten aus Bestellungen speichern wir nur so lange,
-          wie es für die Vertragserfüllung, gesetzliche Aufbewahrungsfristen
-          oder die Geltendmachung von Rechtsansprüchen erforderlich ist.
+          Sie können jederzeit die Löschung Ihrer bei uns gespeicherten Daten
+          verlangen, soweit dem keine gesetzlichen Aufbewahrungspflichten
+          entgegenstehen (siehe Abschnitt 11).
         </p>
 
-        <h2>8. Ihre Rechte</h2>
+        <h2>11. Ihre Rechte</h2>
         <p>Sie haben gegenüber uns folgende Rechte:</p>
         <ul>
           <li>Auskunft (Art. 15 DSGVO)</li>
@@ -119,26 +263,41 @@
         </ul>
         <p>
           Sie haben zudem das Recht, sich bei einer Datenschutz-Aufsichtsbehörde
-          zu beschweren.
+          zu beschweren. Zuständig kann insbesondere die Aufsichtsbehörde Ihres
+          Wohnortes oder unseres Sitzes sein (Thüringer Landesdatenschutz- und
+          Informationsfreiheitsbeauftragter).
         </p>
 
-        <h2>9. Kontakt Datenschutz</h2>
+        <h2>12. Kontakt Datenschutz</h2>
         <p>
           Bei Fragen zum Datenschutz wenden Sie sich bitte an:
-          <span class="placeholder">[E-Mail-Adresse]</span>
+          <a href="mailto:marcjohn1106@gmail.com">marcjohn1106@gmail.com</a>
         </p>
       </div>
     </main>
 
     <footer class="site-footer">
-      <div class="container">
-        <nav class="footer-links">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand" href="./">
+            <strong>Lines by Lines</strong>
+          </a>
+          <p class="footer-note">
+            © <span id="year"></span> Lines by Lines. Alle Rechte vorbehalten.
+          </p>
+        </div>
+        <nav class="footer-links" aria-label="Rechtliches">
           <a href="./impressum.html">Impressum</a>
           <a href="./datenschutz.html">Datenschutz</a>
           <a href="./agb.html">AGB</a>
           <a href="./widerruf.html">Widerruf</a>
+          <a href="#" data-cookie-settings>Cookie-Einstellungen</a>
         </nav>
       </div>
     </footer>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    <script src="./assets/cookie-consent.js" defer></script>
   </body>
 </html>

@@ -3,13 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./assets/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="./assets/favicon.png" />
     <title>AGB – Lines by Lines</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <script src="./assets/fonts-head.js"></script>
     <link rel="stylesheet" href="./assets/site.css" />
   </head>
   <body>
@@ -18,8 +15,8 @@
         <a class="brand" href="./">
           <strong>Lines by Lines</strong>
         </a>
-        <nav class="nav">
-          <a href="./">Startseite</a>
+        <nav class="nav" aria-label="Hauptnavigation">
+          <a class="btn btn-primary" href="./">Startseite</a>
         </nav>
       </div>
     </header>
@@ -27,12 +24,12 @@
     <main class="legal-page">
       <div class="container">
         <h1>Allgemeine Geschäftsbedingungen</h1>
-        <p class="legal-meta">Stand: <span class="placeholder">[Datum]</span></p>
+        <p class="legal-meta">Stand: 7. Juni 2026</p>
 
         <h2>§ 1 Geltungsbereich</h2>
         <p>
           Diese Allgemeinen Geschäftsbedingungen gelten für alle Verträge
-          zwischen <span class="placeholder">[Anbieter]</span> („Anbieter“) und
+          zwischen Marc John, Am Burgrain 5, 99334 Holzhausen („Anbieter“) und
           Verbrauchern über die Erstellung und Lieferung personalisierter
           WhatsApp-Chat-Poster im Rahmen von Lines by Lines.
         </p>
@@ -71,8 +68,7 @@
 
         <h2>§ 6 Lieferung und Bearbeitungszeit</h2>
         <p>
-          Die Bearbeitungszeit beträgt in der Regel
-          <span class="placeholder">[z. B. 3–5 Werktage]</span> nach
+          Die Bearbeitungszeit beträgt in der Regel unverzüglich nach
           vollständigem Zahlungseingang und vollständigen Bestelldaten. Bei
           höherer Nachfrage kann sich die Frist angemessen verlängern.
         </p>
@@ -112,20 +108,33 @@
         <p>
           Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des
           UN-Kaufrechts. Gerichtsstand für Streitigkeiten mit Kaufleuten ist
-          <span class="placeholder">[Ort]</span>.
+          Holzhausen.
         </p>
       </div>
     </main>
 
     <footer class="site-footer">
-      <div class="container">
-        <nav class="footer-links">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand" href="./">
+            <strong>Lines by Lines</strong>
+          </a>
+          <p class="footer-note">
+            © <span id="year"></span> Lines by Lines. Alle Rechte vorbehalten.
+          </p>
+        </div>
+        <nav class="footer-links" aria-label="Rechtliches">
           <a href="./impressum.html">Impressum</a>
           <a href="./datenschutz.html">Datenschutz</a>
           <a href="./agb.html">AGB</a>
           <a href="./widerruf.html">Widerruf</a>
+          <a href="#" data-cookie-settings>Cookie-Einstellungen</a>
         </nav>
       </div>
     </footer>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    <script src="./assets/cookie-consent.js" defer></script>
   </body>
 </html>
