@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bestellung erfolgreich – Line by Line</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container inner">
+        <a class="brand" href="./">
+          <strong>Line by Line</strong>
+        </a>
+        <nav class="nav" aria-label="Hauptnavigation">
+          <a href="./">Startseite</a>
+          <a href="./bestellen.html">Bestellen</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="section order-section">
+        <div class="container">
+          <span class="eyebrow">Zahlung erfolgreich</span>
+          <h1 class="section-title">Vielen Dank!</h1>
+          <p class="section-intro" id="success-message">
+            Eure Zahlung ist eingegangen. Das Poster-PDF wird jetzt an eure
+            E-Mail-Adresse geschickt …
+          </p>
+          <p class="order-hint" id="success-order-id"></p>
+          <p class="order-hint" id="success-email-status" hidden></p>
+          <a class="btn btn-primary" href="./">Zur Startseite</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand" href="./">
+            <strong>Line by Line</strong>
+          </a>
+          <p class="footer-note">
+            © <span id="year"></span> Line by Line. Alle Rechte vorbehalten.
+          </p>
+        </div>
+        <nav class="footer-links" aria-label="Rechtliches">
+          <a href="./impressum.html">Impressum</a>
+          <a href="./datenschutz.html">Datenschutz</a>
+          <a href="./agb.html">AGB</a>
+          <a href="./widerruf.html">Widerruf</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var orderId = params.get("order");
+        var sessionId = params.get("session_id");
+        var messageEl = document.getElementById("success-message");
+        var statusEl = document.getElementById("success-email-status");
+
+        if (orderId) {
+          document.getElementById("success-order-id").textContent =
+            "Bestellnummer: " + orderId;
+        }
+
+        if (!orderId || !sessionId) {
+          if (messageEl) {
+            messageEl.textContent =
+              "Eure Zahlung ist eingegangen. Falls keine E-Mail ankommt, meldet euch bitte mit eurer Bestellnummer.";
+          }
+          return;
+        }
+
+        var host = window.location.hostname;
+        var port = window.location.port;
+        var apiBase;
+        if (port === "8787") {
+          apiBase = window.location.origin;
+        } else if (host === "localhost" || host === "127.0.0.1") {
+          apiBase = "http://127.0.0.1:8787";
+        } else {
+          apiBase = "https://glowing-duty-unplug.ngrok-free.dev";
+        }
+
+        var headers = { "Content-Type": "application/json" };
+        if (/ngrok/i.test(apiBase)) {
+          headers["ngrok-skip-browser-warning"] = "1";
+        }
+
+        fetch(
+          apiBase.replace(/\/$/, "") +
+            "/api/orders/" +
+            encodeURIComponent(orderId) +
+            "/fulfill",
+          {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({ sessionId: sessionId }),
+          }
+        )
+          .then(function (response) {
+            return response.json().then(function (data) {
+              return { ok: response.ok, data: data };
+            });
+          })
+          .then(function (result) {
+            if (result.ok && result.data.emailSent) {
+              if (messageEl) {
+                messageEl.textContent =
+                  "Eure Zahlung ist eingegangen. Das Poster-PDF wurde an eure E-Mail-Adresse geschickt.";
+              }
+              if (statusEl) {
+                statusEl.hidden = false;
+                statusEl.textContent = "Bitte auch den Spam-Ordner prüfen.";
+              }
+              return;
+            }
+
+            if (result.ok && result.data.alreadyDelivered) {
+              if (messageEl) {
+                messageEl.textContent =
+                  "Eure Zahlung ist eingegangen. Das Poster-PDF wurde bereits per E-Mail verschickt.";
+              }
+              return;
+            }
+
+            var err =
+              (result.data && result.data.error) ||
+              "Der E-Mail-Versand konnte nicht gestartet werden.";
+            if (messageEl) {
+              messageEl.textContent =
+                "Eure Zahlung ist eingegangen. Der E-Mail-Versand wird nachgeholt — bitte kurz warten oder uns kontaktieren.";
+            }
+            if (statusEl) {
+              statusEl.hidden = false;
+              statusEl.textContent = err;
+            }
+          })
+          .catch(function () {
+            if (messageEl) {
+              messageEl.textContent =
+                "Eure Zahlung ist eingegangen. Der E-Mail-Versand wird im Hintergrund vorbereitet.";
+            }
+          });
+      })();
+    </script>
+  </body>
+</html>
+

@@ -121,28 +121,97 @@
           <span class="eyebrow">Schritt 2 von 2</span>
           <h2 class="section-title">Jetzt bestellen</h2>
           <p class="section-intro">
-            Habt ihr die ZIP-Datei? Dann ladet sie hier hoch, tragt eure Namen
-            ein und schließt die Bestellung ab. Bezahlung und Upload erfolgen
-            über Tally.
+            ZIP hochladen, Poster wird erstellt — danach bezahlt ihr sicher über
+            Stripe und erhaltet das PDF per E-Mail.
           </p>
-          <div class="tally-embed" id="tally-embed">
-            <iframe
-              data-tally-src="https://tally.so/embed/xXz2qd?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-              loading="lazy"
-              width="100%"
-              height="420"
-              frameborder="0"
-              marginheight="0"
-              marginwidth="0"
-              title="Line by Line Bestellformular"
-            ></iframe>
+
+          <p class="order-api-warning" id="order-api-warning" hidden></p>
+
+          <div class="order-flow">
+            <div id="order-panel-form">
+              <form class="order-form" id="order-form" enctype="multipart/form-data">
+                <div class="order-form-row">
+                  <label class="order-label" for="firstName">Vorname</label>
+                  <input
+                    class="order-input"
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    autocomplete="given-name"
+                    required
+                  />
+                </div>
+                <div class="order-form-row">
+                  <label class="order-label" for="lastName">Nachname</label>
+                  <input
+                    class="order-input"
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    autocomplete="family-name"
+                    required
+                  />
+                </div>
+                <div class="order-form-row">
+                  <label class="order-label" for="email">E-Mail</label>
+                  <input
+                    class="order-input"
+                    id="email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    required
+                  />
+                  <span class="order-hint">Hier schicken wir euer Poster-PDF hin.</span>
+                </div>
+                <div class="order-form-row">
+                  <label class="order-label" for="zip">WhatsApp-ZIP</label>
+                  <input
+                    class="order-input order-file"
+                    id="zip"
+                    name="zip"
+                    type="file"
+                    accept=".zip,application/zip"
+                    required
+                  />
+                  <span class="order-hint">Max. 10 MB · nur .zip</span>
+                </div>
+                <button class="btn btn-primary order-submit" type="submit">
+                  Poster erstellen
+                </button>
+              </form>
+            </div>
+
+            <div id="order-panel-progress" class="order-panel" hidden>
+              <p class="order-panel-title">Euer Poster wird erstellt …</p>
+              <p class="order-progress-label" id="order-progress-label">
+                Upload erfolgreich — Verarbeitung läuft …
+              </p>
+              <div class="order-progress-track" aria-hidden="true">
+                <div class="order-progress-bar" id="order-progress-bar"></div>
+              </div>
+              <p class="order-hint">Das kann einige Minuten dauern. Bitte Tab offen lassen.</p>
+            </div>
+
+            <div id="order-panel-pay" class="order-panel" hidden>
+              <p class="order-panel-title">Poster ist fertig!</p>
+              <p class="order-panel-text">
+                Als Nächstes bezahlt ihr über Stripe. Danach erhaltet ihr das PDF
+                automatisch per E-Mail.
+              </p>
+              <button class="btn btn-primary order-submit" type="button" id="order-pay-btn">
+                Jetzt bezahlen
+              </button>
+            </div>
+
+            <div id="order-panel-error" class="order-panel order-panel-error" hidden>
+              <p class="order-panel-title">Das hat leider nicht geklappt</p>
+              <p class="order-panel-text" id="order-error-text"></p>
+              <button class="btn btn-secondary" type="button" id="order-retry-btn">
+                Erneut versuchen
+              </button>
+            </div>
           </div>
-          <noscript>
-            <p class="section-intro">
-              JavaScript ist deaktiviert. Formular direkt öffnen:
-              <a href="https://tally.so/r/xXz2qd">tally.so/r/xXz2qd</a>
-            </p>
-          </noscript>
         </div>
       </section>
     </main>
@@ -168,7 +237,22 @@
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
+
+      // API-URL: lokal automatisch, live ngrok/VPS (siehe assets/order.js)
+      (function () {
+        var host = window.location.hostname;
+        var port = window.location.port;
+        var apiBase;
+        if (port === "8787" || port === String(8787)) {
+          apiBase = window.location.origin;
+        } else if (host === "localhost" || host === "127.0.0.1") {
+          apiBase = "http://127.0.0.1:8787";
+        } else {
+          apiBase = "https://glowing-duty-unplug.ngrok-free.dev";
+        }
+        window.LINE_BY_LINE_CONFIG = { apiBase: apiBase };
+      })();
     </script>
-    <script async src="https://tally.so/widgets/embed.js"></script>
+    <script src="./assets/order.js" defer></script>
   </body>
 </html>

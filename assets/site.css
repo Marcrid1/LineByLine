@@ -356,6 +356,143 @@ h3,
   color: var(--muted);
 }
 
+.order-flow {
+  width: 100%;
+  max-width: 28rem;
+  margin: 2rem auto 0;
+  text-align: left;
+}
+
+.order-form {
+  display: grid;
+  gap: 1.1rem;
+  padding: 1.75rem;
+  border-radius: var(--radius);
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.order-form-row {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.order-label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--warm);
+}
+
+.order-input {
+  width: 100%;
+  padding: 0.72rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font: inherit;
+  color: var(--warm);
+  background: var(--cream);
+}
+
+.order-input:focus {
+  outline: 2px solid rgba(201, 120, 122, 0.35);
+  outline-offset: 1px;
+}
+
+.order-file {
+  padding: 0.55rem 0.75rem;
+  background: #fff;
+}
+
+.order-hint {
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.order-submit {
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.order-panel {
+  padding: 1.75rem;
+  border-radius: var(--radius);
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.order-panel-error {
+  border-color: rgba(168, 93, 95, 0.35);
+  background: linear-gradient(180deg, #fff, #fff6f4);
+}
+
+.order-panel-title {
+  margin: 0 0 0.65rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 500;
+  color: var(--warm);
+}
+
+.order-panel-text {
+  margin: 0 0 1.25rem;
+  color: var(--muted);
+}
+
+.order-progress-track {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--cream-dark);
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.order-progress-bar {
+  width: 8%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--rose), var(--rose-deep));
+  transition: width 0.6s ease;
+}
+
+.order-progress-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.order-api-warning {
+  max-width: 28rem;
+  margin: 1rem auto 0;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: #fff3cd;
+  color: #6b4f1d;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.72rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--warm);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  border-color: var(--rose);
+  color: var(--rose-deep);
+}
+
 .site-footer {
   margin-top: 2rem;
   padding: 2.5rem 0 2rem;
