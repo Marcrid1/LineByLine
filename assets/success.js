@@ -42,8 +42,31 @@
   }
 
   if (viewBtn) {
-    viewBtn.href = posterUrl();
     viewBtn.hidden = false;
+    viewBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      viewBtn.disabled = true;
+      viewBtn.textContent = "Wird geladen …";
+
+      fetch(posterUrl(), { headers: apiHeaders() })
+        .then(function (response) {
+          if (!response.ok) throw new Error("PDF nicht verfügbar");
+          return response.blob();
+        })
+        .then(function (blob) {
+          var blobUrl = URL.createObjectURL(blob);
+          window.open(blobUrl, "_blank", "noopener");
+          viewBtn.disabled = false;
+          viewBtn.textContent = "Poster ansehen";
+        })
+        .catch(function () {
+          viewBtn.disabled = false;
+          viewBtn.textContent = "Poster ansehen";
+          alert(
+            "Poster konnte nicht geladen werden. Prüft euer E-Mail-Postfach – das PDF wurde dort hingeschickt."
+          );
+        });
+    });
   }
   if (homeBtn) {
     homeBtn.classList.remove("btn-primary");

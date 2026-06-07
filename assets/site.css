@@ -348,32 +348,10 @@ h3,
 }
 
 .coming-soon-box {
-  display: grid;
-  grid-template-columns: 1.3fr 0.9fr;
-  gap: 2rem;
-  align-items: center;
   padding: 2rem;
   border-radius: calc(var(--radius) + 4px);
   background: linear-gradient(135deg, #fff 0%, var(--cream-dark) 100%);
   border: 1px solid var(--border);
-}
-
-.coming-soon-action {
-  text-align: center;
-}
-
-.coming-soon-note {
-  margin: 0 0 1rem;
-  color: var(--muted);
-  font-size: 0.94rem;
-}
-
-.order-print-note {
-  margin: -0.5rem auto 1.5rem;
-  max-width: 32rem;
-  color: var(--muted);
-  font-size: 0.92rem;
-  text-align: center;
 }
 
 .order-section {
@@ -953,7 +931,6 @@ h3,
   .cards,
   .steps,
   .privacy-box,
-  .coming-soon-box,
   .footer-grid,
   .export-grid {
     grid-template-columns: 1fr;

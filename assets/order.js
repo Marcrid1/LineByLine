@@ -73,7 +73,13 @@
     return `${API_BASE.replace(/\/$/, "")}/api/orders/${encodeURIComponent(orderId)}/preview`;
   }
 
+  let previewObjectUrl = "";
+
   function clearPosterPreview() {
+    if (previewObjectUrl) {
+      URL.revokeObjectURL(previewObjectUrl);
+      previewObjectUrl = "";
+    }
     if (posterImage) posterImage.removeAttribute("src");
     if (posterPreview) posterPreview.hidden = true;
   }
@@ -84,18 +90,19 @@
     const url = posterPreviewUrl(orderId);
 
     try {
-      const response = await fetch(url, { method: "HEAD", headers: apiHeaders() });
+      const response = await fetch(url, { headers: apiHeaders() });
       if (!response.ok) {
         clearPosterPreview();
         return;
       }
+      const blob = await response.blob();
+      if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+      previewObjectUrl = URL.createObjectURL(blob);
+      posterImage.src = previewObjectUrl;
+      posterPreview.hidden = false;
     } catch {
       clearPosterPreview();
-      return;
     }
-
-    posterImage.src = url;
-    posterPreview.hidden = false;
   }
 
   function hidePendingBanner() {
