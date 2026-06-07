@@ -1,6 +1,5 @@
 # ── Private Engine (lokal, nicht öffentlich) ──
 app/
-src/
 server/
 .env
 server/.env

@@ -329,33 +329,6 @@ h3,
   text-align: center;
 }
 
-.tally-embed {
-  width: 100%;
-  max-width: 32rem;
-  margin: 2rem auto 0;
-  min-height: 420px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: #fff;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-}
-
-.tally-embed iframe {
-  display: block;
-  width: 100%;
-  max-width: 32rem;
-}
-
-.tally-placeholder {
-  display: grid;
-  place-items: center;
-  min-height: 420px;
-  padding: 2rem;
-  text-align: center;
-  color: var(--muted);
-}
-
 .order-flow {
   width: 100%;
   max-width: 28rem;
@@ -463,6 +436,83 @@ h3,
   font-size: 0.95rem;
 }
 
+.order-poster-preview {
+  margin: 0 auto 1.35rem;
+  width: 100%;
+}
+
+.order-poster-preview-shell {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.65rem;
+  box-sizing: border-box;
+  border-radius: calc(var(--radius) + 4px);
+  background: linear-gradient(145deg, #fff, var(--cream-dark));
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.order-poster-preview-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0.45rem;
+  border: 1px solid rgba(201, 120, 122, 0.22);
+  border-radius: var(--radius);
+  pointer-events: none;
+}
+
+.order-poster-preview-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 210 / 297;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #fff8f4;
+}
+
+.order-poster-preview-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+#order-panel-pay {
+  overflow-x: hidden;
+}
+
+.order-pending-banner {
+  margin-bottom: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius);
+  border: 1px solid rgba(201, 120, 122, 0.28);
+  background: linear-gradient(180deg, #fff, #fff8f4);
+}
+
+.order-pending-banner-text {
+  margin: 0 0 0.85rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.order-pending-banner-actions {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.order-new-from-pay {
+  width: 100%;
+  margin-top: 0.55rem;
+}
+
+#order-panel-pay .order-submit {
+  margin-top: 0;
+}
+
 .order-api-warning {
   max-width: 28rem;
   margin: 1rem auto 0;
@@ -491,6 +541,10 @@ h3,
 .btn-secondary:hover {
   border-color: var(--rose);
   color: var(--rose-deep);
+}
+
+#view-poster-btn {
+  margin-bottom: 0.75rem;
 }
 
 .site-footer {
