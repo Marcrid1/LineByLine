@@ -41,6 +41,11 @@
 
   let currentOrderId = "";
   let pollTimer = null;
+  let payPanelTransitioning = false;
+
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   function showPanel(panel) {
     [panelForm, panelProgress, panelError, panelPay].forEach((el) => {
@@ -84,8 +89,8 @@
     if (posterPreview) posterPreview.hidden = true;
   }
 
-  async function showPosterPreview(orderId) {
-    if (!posterPreview || !posterImage || !orderId) return;
+  async function loadPosterPreview(orderId) {
+    if (!posterPreview || !posterImage || !orderId) return false;
 
     const url = posterPreviewUrl(orderId);
 
@@ -93,15 +98,41 @@
       const response = await fetch(url, { headers: apiHeaders() });
       if (!response.ok) {
         clearPosterPreview();
-        return;
+        return false;
       }
       const blob = await response.blob();
       if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
       previewObjectUrl = URL.createObjectURL(blob);
       posterImage.src = previewObjectUrl;
+
+      if (typeof posterImage.decode === "function") {
+        await posterImage.decode();
+      } else {
+        await new Promise((resolve, reject) => {
+          if (posterImage.complete && posterImage.naturalWidth > 0) {
+            resolve();
+            return;
+          }
+          const onLoad = () => {
+            posterImage.removeEventListener("load", onLoad);
+            posterImage.removeEventListener("error", onError);
+            resolve();
+          };
+          const onError = () => {
+            posterImage.removeEventListener("load", onLoad);
+            posterImage.removeEventListener("error", onError);
+            reject(new Error("Vorschau konnte nicht geladen werden"));
+          };
+          posterImage.addEventListener("load", onLoad);
+          posterImage.addEventListener("error", onError);
+        });
+      }
+
       posterPreview.hidden = false;
+      return true;
     } catch {
       clearPosterPreview();
+      return false;
     }
   }
 
@@ -113,10 +144,40 @@
     if (pendingBanner) pendingBanner.hidden = false;
   }
 
-  function showPayPanel() {
-    hidePendingBanner();
-    showPanel(panelPay);
-    if (currentOrderId) showPosterPreview(currentOrderId);
+  async function showPayPanel() {
+    if (payPanelTransitioning) return;
+    payPanelTransitioning = true;
+
+    try {
+      hidePendingBanner();
+
+      const onProgress = panelProgress && !panelProgress.hidden;
+      const previewReady =
+        posterPreview && !posterPreview.hidden && posterImage && posterImage.src;
+
+      if (onProgress || (currentOrderId && !previewReady)) {
+        if (onProgress) {
+          setProgress(94, "Vorschau wird geladen …");
+        }
+
+        const start = Date.now();
+        if (currentOrderId && !previewReady) {
+          await loadPosterPreview(currentOrderId);
+        }
+
+        if (onProgress) {
+          const minWait = 900;
+          const remaining = minWait - (Date.now() - start);
+          if (remaining > 0) await sleep(remaining);
+          setProgress(100, "Fertig!");
+          await sleep(400);
+        }
+      }
+
+      showPanel(panelPay);
+    } finally {
+      payPanelTransitioning = false;
+    }
   }
 
   function resetToNewOrder() {
@@ -186,8 +247,8 @@
 
     if (data.status === "ready") {
       stopPolling();
-      setProgress(100, "Poster ist fertig!");
-      setTimeout(() => showPayPanel(), 450);
+      setProgress(92, "Fast fertig — Vorschau wird vorbereitet …");
+      await showPayPanel();
       return;
     }
 
@@ -203,7 +264,7 @@
 
     if (data.status === "checkout" || data.status === "paid" || data.status === "delivered") {
       stopPolling();
-      showPayPanel();
+      await showPayPanel();
     }
   }
 
@@ -228,6 +289,12 @@
     }, POLL_MS);
   }
 
+  function siteBaseUrl() {
+    const path = window.location.pathname.replace(/\/[^/]*$/, "");
+    if (!path || path === "/") return window.location.origin;
+    return `${window.location.origin}${path}`;
+  }
+
   async function startCheckout() {
     if (!currentOrderId) return;
     payBtn.disabled = true;
@@ -236,7 +303,11 @@
     try {
       const data = await apiFetch(
         `/api/orders/${encodeURIComponent(currentOrderId)}/checkout`,
-        { method: "POST" }
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ siteBase: siteBaseUrl() }),
+        }
       );
       if (data.url) {
         window.location.href = data.url;
@@ -296,7 +367,7 @@
 
   if (continuePayBtn) {
     continuePayBtn.addEventListener("click", () => {
-      if (currentOrderId) showPayPanel();
+      if (currentOrderId) showPayPanel().catch(() => {});
     });
   }
 
@@ -316,7 +387,7 @@
 
       if (data.status === "ready" || data.status === "checkout") {
         if (allowPayPanel) {
-          showPayPanel();
+          await showPayPanel();
         } else {
           showPanel(panelForm);
           showPendingBanner();
