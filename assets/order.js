@@ -79,57 +79,113 @@
   }
 
   let previewObjectUrl = "";
+  let previewBlob = null;
+
+  function isIOS() {
+    return (
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+    );
+  }
+
+  function blobToDataUrl(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(new Error("Data-URL fehlgeschlagen"));
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  function waitForImageLoad(img) {
+    return new Promise((resolve, reject) => {
+      if (img.complete && img.naturalWidth > 0) {
+        resolve();
+        return;
+      }
+      const onLoad = () => {
+        img.removeEventListener("load", onLoad);
+        img.removeEventListener("error", onError);
+        resolve();
+      };
+      const onError = () => {
+        img.removeEventListener("load", onLoad);
+        img.removeEventListener("error", onError);
+        reject(new Error("Vorschau konnte nicht geladen werden"));
+      };
+      img.addEventListener("load", onLoad);
+      img.addEventListener("error", onError);
+    });
+  }
 
   function clearPosterPreview() {
     if (previewObjectUrl) {
       URL.revokeObjectURL(previewObjectUrl);
       previewObjectUrl = "";
     }
+    previewBlob = null;
     if (posterImage) posterImage.removeAttribute("src");
     if (posterPreview) posterPreview.hidden = true;
+  }
+
+  async function fetchPosterPreview(orderId) {
+    if (!orderId) return false;
+
+    const url = posterPreviewUrl(orderId);
+    const response = await fetch(url, { headers: apiHeaders() });
+    if (!response.ok) return false;
+
+    const contentType = String(response.headers.get("content-type") || "").toLowerCase();
+    if (contentType && !contentType.includes("image/")) return false;
+
+    const blob = await response.blob();
+    if (!blob || blob.size < 256) return false;
+    if (blob.type && !blob.type.includes("image/")) return false;
+
+    if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+    previewBlob = blob;
+    previewObjectUrl = URL.createObjectURL(blob);
+    return true;
+  }
+
+  async function mountPosterPreview() {
+    if (!posterPreview || !posterImage || !previewBlob) return false;
+
+    posterPreview.hidden = false;
+
+    async function trySrc(src) {
+      posterImage.removeAttribute("src");
+      posterImage.src = src;
+      await waitForImageLoad(posterImage);
+    }
+
+    try {
+      if (isIOS()) {
+        try {
+          await trySrc(await blobToDataUrl(previewBlob));
+          return true;
+        } catch {
+          // Fallback: Blob-URL nach sichtbarem Panel
+        }
+      }
+
+      if (previewObjectUrl) {
+        await trySrc(previewObjectUrl);
+        return true;
+      }
+    } catch {
+      clearPosterPreview();
+    }
+
+    return false;
   }
 
   async function loadPosterPreview(orderId) {
     if (!posterPreview || !posterImage || !orderId) return false;
 
-    const url = posterPreviewUrl(orderId);
-
     try {
-      const response = await fetch(url, { headers: apiHeaders() });
-      if (!response.ok) {
-        clearPosterPreview();
-        return false;
-      }
-      const blob = await response.blob();
-      if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
-      previewObjectUrl = URL.createObjectURL(blob);
-      posterImage.src = previewObjectUrl;
-
-      if (typeof posterImage.decode === "function") {
-        await posterImage.decode();
-      } else {
-        await new Promise((resolve, reject) => {
-          if (posterImage.complete && posterImage.naturalWidth > 0) {
-            resolve();
-            return;
-          }
-          const onLoad = () => {
-            posterImage.removeEventListener("load", onLoad);
-            posterImage.removeEventListener("error", onError);
-            resolve();
-          };
-          const onError = () => {
-            posterImage.removeEventListener("load", onLoad);
-            posterImage.removeEventListener("error", onError);
-            reject(new Error("Vorschau konnte nicht geladen werden"));
-          };
-          posterImage.addEventListener("load", onLoad);
-          posterImage.addEventListener("error", onError);
-        });
-      }
-
-      posterPreview.hidden = false;
-      return true;
+      clearPosterPreview();
+      return await fetchPosterPreview(orderId);
     } catch {
       clearPosterPreview();
       return false;
@@ -153,7 +209,11 @@
 
       const onProgress = panelProgress && !panelProgress.hidden;
       const previewReady =
-        posterPreview && !posterPreview.hidden && posterImage && posterImage.src;
+        posterPreview &&
+        !posterPreview.hidden &&
+        posterImage &&
+        posterImage.src &&
+        posterImage.naturalWidth > 0;
 
       if (onProgress || (currentOrderId && !previewReady)) {
         if (onProgress) {
@@ -161,7 +221,7 @@
         }
 
         const start = Date.now();
-        if (currentOrderId && !previewReady) {
+        if (currentOrderId && !previewReady && !previewBlob) {
           await loadPosterPreview(currentOrderId);
         }
 
@@ -175,6 +235,10 @@
       }
 
       showPanel(panelPay);
+
+      if (previewBlob && !previewReady) {
+        await mountPosterPreview();
+      }
     } finally {
       payPanelTransitioning = false;
     }
