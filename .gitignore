@@ -1,10 +1,14 @@
 # ── Private Engine (lokal, nicht öffentlich) ──
 app/
 src/
+server/
+.env
+server/.env
 
 # Kundendaten & Chat-Exports
 Input/
 input/
+Output/
 *.zip
 
 # Build & Dependencies
