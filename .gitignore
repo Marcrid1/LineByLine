@@ -22,3 +22,6 @@ desktop.ini
 *.log
 .vscode/
 .idea/
+
+# Favicon master (optimized copies are committed)
+assets/favicon-source.png

@@ -1,6 +1,54 @@
 (function () {
   "use strict";
 
+  function siteBasePath() {
+    return window.location.pathname.indexOf("/LineByLine") === 0
+      ? "/LineByLine"
+      : "";
+  }
+
+  function installFavicons() {
+    var base = siteBasePath();
+    var head = document.head;
+    if (!head) return;
+
+    var specs = [
+      { rel: "icon", href: base + "/assets/favicon.png", type: "image/png", sizes: "32x32" },
+      {
+        rel: "icon",
+        href: base + "/assets/favicon-192.png",
+        type: "image/png",
+        sizes: "192x192",
+      },
+      {
+        rel: "apple-touch-icon",
+        href: base + "/assets/apple-touch-icon.png",
+        type: "image/png",
+        sizes: "180x180",
+      },
+      { rel: "shortcut icon", href: base + "/favicon.ico", type: "image/x-icon" },
+    ];
+
+    specs.forEach(function (spec) {
+      var selector =
+        'link[rel="' +
+        spec.rel +
+        '"][href="' +
+        spec.href +
+        '"]';
+      if (head.querySelector(selector)) return;
+
+      var link = document.createElement("link");
+      link.rel = spec.rel;
+      link.href = spec.href;
+      if (spec.type) link.type = spec.type;
+      if (spec.sizes) link.sizes = spec.sizes;
+      head.appendChild(link);
+    });
+  }
+
+  installFavicons();
+
   var STORAGE_KEY = "linesByLinesCookieConsent";
   var CONSENT_VERSION = 1;
   var FONTS_HREF =
