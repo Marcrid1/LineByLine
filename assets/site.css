@@ -246,6 +246,24 @@ h3,
   border-block: 1px solid var(--border);
 }
 
+.section-alt + .section-alt {
+  border-top: none;
+}
+
+main > .section-alt:last-child {
+  border-bottom: none;
+}
+
+.landing-page > .section:not(.hero),
+.order-page > .section:not(.order-page-intro) {
+  background: linear-gradient(180deg, #fff 0%, var(--cream) 100%);
+}
+
+.landing-page .privacy-box,
+.landing-page .coming-soon-box {
+  background: #fff;
+}
+
 .section-title {
   margin: 0 0 0.75rem;
   font-size: clamp(2rem, 3.5vw, 2.75rem);
