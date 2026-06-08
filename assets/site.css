@@ -121,6 +121,14 @@ h3,
   color: var(--rose-deep);
 }
 
+.hide-narrow {
+  display: inline;
+}
+
+.show-narrow {
+  display: none;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -1080,11 +1088,33 @@ main > .section-alt:last-child {
   }
 
   .footer-grid {
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   .footer-links {
-    gap: 0.45rem 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem 0.5rem;
+  }
+
+  .footer-links a {
+    font-size: 0.78rem;
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  .footer-links a[data-cookie-settings] {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .footer-note {
+    margin-top: 0.75rem;
+    font-size: 0.78rem;
+  }
+
+  .site-footer .brand strong {
+    font-size: 1.2rem;
   }
 
   .legal-page {
@@ -1103,6 +1133,49 @@ main > .section-alt:last-child {
 @media (max-width: 600px) {
   .container {
     width: min(100% - 1.15rem, var(--max));
+  }
+
+  .hide-narrow {
+    display: none !important;
+  }
+
+  .show-narrow {
+    display: inline !important;
+  }
+
+  .site-header .inner {
+    gap: 0.45rem;
+    align-items: center;
+  }
+
+  .brand {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .brand strong {
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+  }
+
+  .nav {
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+  }
+
+  .nav a:not(.btn) {
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+
+  .nav .btn {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.76rem;
+    min-height: 2.15rem;
+    white-space: nowrap;
+    box-shadow: 0 6px 14px rgba(168, 93, 95, 0.2);
   }
 
   .eyebrow {
@@ -1167,10 +1240,35 @@ main > .section-alt:last-child {
     font-size: 0.92rem;
   }
 
-  .nav .btn {
-    padding: 0.55rem 0.85rem;
-    font-size: 0.82rem;
-    min-height: 2.5rem;
+  .site-footer {
+    padding: 1rem 0 calc(0.85rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .footer-grid {
+    gap: 0.75rem;
+  }
+
+  .footer-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.3rem 0.55rem;
+  }
+
+  .footer-links a {
+    font-size: 0.72rem;
+    text-align: left;
+  }
+
+  .footer-links a[data-cookie-settings] {
+    grid-column: 1 / -1;
+  }
+
+  .footer-note {
+    margin-top: 0.55rem;
+    font-size: 0.74rem;
+  }
+
+  .site-footer .brand strong {
+    font-size: 1.1rem;
   }
 
   .order-form,
