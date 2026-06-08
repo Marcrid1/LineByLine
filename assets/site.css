@@ -944,7 +944,35 @@ main > .section-alt:last-child {
   font-weight: 600;
 }
 
+@media (hover: none) {
+  .btn:hover {
+    transform: none;
+  }
+}
+
 @media (max-width: 900px) {
+  body {
+    overflow-x: clip;
+  }
+
+  .container {
+    width: min(100% - 1.5rem, var(--max));
+  }
+
+  .site-header .inner {
+    min-height: 3.75rem;
+    padding: 0.75rem 0;
+  }
+
+  .brand strong {
+    font-size: 1.28rem;
+  }
+
+  .nav .btn {
+    padding: 0.65rem 1rem;
+    font-size: 0.88rem;
+  }
+
   .hero-grid,
   .cards,
   .steps,
@@ -955,10 +983,233 @@ main > .section-alt:last-child {
   }
 
   .hero {
-    padding-top: 3rem;
+    padding: 2.5rem 0 2rem;
+  }
+
+  .hero-grid {
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .hero-lead {
+    margin-inline: auto;
+    font-size: 1rem;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    max-width: 18rem;
+  }
+
+  .hero-poster-frame {
+    width: min(100%, 15.5rem);
+  }
+
+  .poster-frame {
+    padding: 0.9rem;
+  }
+
+  .section {
+    padding: 2.75rem 0;
+  }
+
+  .section-title {
+    font-size: clamp(1.75rem, 6vw, 2.35rem);
+  }
+
+  .section-intro {
+    margin-bottom: 1.75rem;
+    font-size: 0.98rem;
+  }
+
+  .privacy-box,
+  .coming-soon-box {
+    padding: 1.35rem;
+  }
+
+  .landing-page #datenschutz .privacy-box > div,
+  .landing-page #demnaechst .coming-soon-box {
+    text-align: center;
+  }
+
+  .landing-page #datenschutz .section-title,
+  .landing-page #demnaechst .section-title {
+    text-align: center !important;
+  }
+
+  .landing-page #demnaechst .coming-soon-box p {
+    margin-inline: auto !important;
+  }
+
+  .order-page-intro {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+  }
+
+  .order-page-intro .section-title,
+  .order-page-intro .section-intro {
+    text-align: left;
+  }
+
+  .order-form,
+  .order-panel {
+    padding: 1.25rem;
+  }
+
+  .order-flow {
+    margin-top: 1.5rem;
+  }
+
+  .order-section .container > .btn {
+    display: inline-flex;
+    width: 100%;
+    max-width: 20rem;
+  }
+
+  .order-section .container > .btn + .btn {
+    margin-top: 0.65rem;
+  }
+
+  .site-footer {
+    padding: 2rem 0 calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    min-height: unset;
+  }
+
+  .footer-grid {
+    gap: 1.5rem;
+  }
+
+  .footer-links {
+    gap: 0.45rem 1rem;
+  }
+
+  .legal-page {
+    padding: 2.25rem 0 2.75rem;
+  }
+
+  .legal-page h2 {
+    font-size: 1.3rem;
   }
 
   .nav .hide-mobile {
     display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    width: min(100% - 1.15rem, var(--max));
+  }
+
+  .eyebrow {
+    font-size: 0.64rem;
+    letter-spacing: 0.14em;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero {
+    padding: 2rem 0 1.75rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.95rem, 9vw, 2.45rem);
+    line-height: 1.12;
+  }
+
+  .hero-lead {
+    font-size: 0.96rem;
+    margin-bottom: 1.35rem;
+  }
+
+  .hero-actions .btn {
+    max-width: none;
+  }
+
+  .hero-poster-frame {
+    width: min(100%, 13.5rem);
+  }
+
+  .section {
+    padding: 2.15rem 0;
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 7vw, 2rem);
+  }
+
+  .section-intro {
+    margin-bottom: 1.5rem;
+    font-size: 0.94rem;
+  }
+
+  .card,
+  .step,
+  .export-card {
+    padding: 1.15rem;
+  }
+
+  .card h3,
+  .export-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .step h3 {
+    font-size: 1.12rem;
+  }
+
+  .btn {
+    min-height: 2.75rem;
+    padding: 0.7rem 1.1rem;
+    font-size: 0.92rem;
+  }
+
+  .nav .btn {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.82rem;
+    min-height: 2.5rem;
+  }
+
+  .order-form,
+  .order-panel {
+    padding: 1.05rem;
+    border-radius: calc(var(--radius) - 2px);
+  }
+
+  .order-panel-title {
+    font-size: 1.35rem;
+  }
+
+  .order-input {
+    padding: 0.78rem 0.85rem;
+    font-size: 16px;
+  }
+
+  .order-section .container > .btn {
+    max-width: none;
+  }
+
+  .export-steps {
+    font-size: 0.9rem;
+    padding-left: 1.05rem;
+  }
+
+  .cookie-banner,
+  .cookie-settings {
+    padding: 0.65rem;
+    padding-bottom: calc(0.65rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .cookie-banner-inner,
+  .cookie-settings-panel {
+    padding: 1rem 1.1rem;
+  }
+
+  .cookie-banner-copy h2,
+  .cookie-settings-panel h2 {
+    font-size: 1.2rem;
   }
 }
