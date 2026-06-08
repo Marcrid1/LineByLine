@@ -8,7 +8,12 @@
   const panelForm = document.getElementById("order-panel-form");
   const panelProgress = document.getElementById("order-panel-progress");
   const panelError = document.getElementById("order-panel-error");
+  const panelNames = document.getElementById("order-panel-names");
   const panelPay = document.getElementById("order-panel-pay");
+  const reviewBlock = document.getElementById("order-review-block");
+  const namesForm = document.getElementById("order-names-form");
+  const namesFields = document.getElementById("order-names-fields");
+  const namesSubmitBtn = document.getElementById("order-names-submit");
   const progressBar = document.getElementById("order-progress-bar");
   const progressLabel = document.getElementById("order-progress-label");
   const errorText = document.getElementById("order-error-text");
@@ -41,15 +46,69 @@
 
   let currentOrderId = "";
   let pollTimer = null;
-  let payPanelTransitioning = false;
+  let panelTransitioning = false;
 
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  function showPanel(panel) {
-    [panelForm, panelProgress, panelError, panelPay].forEach((el) => {
-      if (el) el.hidden = el !== panel;
+  function showFlowStep(step) {
+    if (panelForm) panelForm.hidden = step !== "form";
+    if (panelProgress) panelProgress.hidden = step !== "progress";
+    if (panelError) panelError.hidden = step !== "error";
+    if (panelNames) panelNames.hidden = step !== "review";
+    if (panelPay) panelPay.hidden = step !== "pay";
+    if (reviewBlock) reviewBlock.hidden = step !== "review" && step !== "pay";
+  }
+
+  function personLabel(index) {
+    const labels = ["Erste Person", "Zweite Person", "Dritte Person", "Vierte Person"];
+    return labels[index] || `${index + 1}. Person`;
+  }
+
+  function renderParticipantFields(participants) {
+    if (!namesFields) return;
+    namesFields.innerHTML = "";
+
+    (participants || []).forEach((participant) => {
+      const original = String(participant.original || "").trim();
+      const row = document.createElement("div");
+      row.className = "order-form-row order-name-row";
+
+      const label = document.createElement("label");
+      label.className = "order-label order-name-label";
+      label.setAttribute("for", `participant-name-${participant.index}`);
+      label.textContent = original
+        ? `${personLabel(participant.index)}: ${original}`
+        : personLabel(participant.index);
+
+      const detected = document.createElement("p");
+      detected.className = "order-name-source";
+      detected.textContent = "Erkannt in WhatsApp";
+
+      const input = document.createElement("input");
+      input.className = "order-input order-name-input";
+      input.id = `participant-name-${participant.index}`;
+      input.name = `participant_${participant.index}`;
+      input.type = "text";
+      input.maxLength = 48;
+      input.autocomplete = "off";
+      input.value = "";
+      input.placeholder = original;
+      input.dataset.original = original;
+      input.setAttribute("aria-label", `Anzeigename für ${original}`);
+
+      row.append(label, detected, input);
+      namesFields.appendChild(row);
+    });
+  }
+
+  function collectParticipantNames() {
+    if (!namesFields) return [];
+    return Array.from(namesFields.querySelectorAll("input.order-name-input")).map((input) => {
+      const typed = String(input.value || "").trim();
+      if (typed) return typed;
+      return String(input.dataset.original || input.placeholder || "").trim();
     });
   }
 
@@ -131,7 +190,7 @@
   async function fetchPosterPreview(orderId) {
     if (!orderId) return false;
 
-    const url = posterPreviewUrl(orderId);
+    const url = `${posterPreviewUrl(orderId)}?t=${Date.now()}`;
     const response = await fetch(url, { headers: apiHeaders() });
     if (!response.ok) return false;
 
@@ -180,11 +239,18 @@
     return false;
   }
 
+  async function loadAndMountPreview(orderId) {
+    if (!orderId) return false;
+    clearPosterPreview();
+    const loaded = await loadPosterPreview(orderId);
+    if (!loaded) return false;
+    return mountPosterPreview();
+  }
+
   async function loadPosterPreview(orderId) {
-    if (!posterPreview || !posterImage || !orderId) return false;
+    if (!orderId) return false;
 
     try {
-      clearPosterPreview();
       return await fetchPosterPreview(orderId);
     } catch {
       clearPosterPreview();
@@ -200,9 +266,42 @@
     if (pendingBanner) pendingBanner.hidden = false;
   }
 
+  async function finishProgressThen(step, label) {
+    setProgress(100, label || "Fertig!");
+    await sleep(350);
+    showFlowStep(step);
+  }
+
+  async function showReviewPanel(participants) {
+    if (panelTransitioning) return;
+    panelTransitioning = true;
+
+    try {
+      hidePendingBanner();
+      renderParticipantFields(participants);
+
+      const onProgress = panelProgress && !panelProgress.hidden;
+      if (onProgress) {
+        setProgress(94, "Vorschau wird geladen …");
+      }
+
+      if (currentOrderId) {
+        await loadAndMountPreview(currentOrderId);
+      }
+
+      if (onProgress) {
+        await finishProgressThen("review");
+      } else {
+        showFlowStep("review");
+      }
+    } finally {
+      panelTransitioning = false;
+    }
+  }
+
   async function showPayPanel() {
-    if (payPanelTransitioning) return;
-    payPanelTransitioning = true;
+    if (panelTransitioning) return;
+    panelTransitioning = true;
 
     try {
       hidePendingBanner();
@@ -220,27 +319,24 @@
           setProgress(94, "Vorschau wird geladen …");
         }
 
-        const start = Date.now();
-        if (currentOrderId && !previewReady && !previewBlob) {
-          await loadPosterPreview(currentOrderId);
+        if (currentOrderId && !previewReady) {
+          await loadAndMountPreview(currentOrderId);
         }
 
         if (onProgress) {
-          const minWait = 900;
-          const remaining = minWait - (Date.now() - start);
-          if (remaining > 0) await sleep(remaining);
-          setProgress(100, "Fertig!");
-          await sleep(400);
+          await finishProgressThen("pay");
+        } else {
+          showFlowStep("pay");
+          if (previewBlob && !previewReady) {
+            await mountPosterPreview();
+          }
         }
+        return;
       }
 
-      showPanel(panelPay);
-
-      if (previewBlob && !previewReady) {
-        await mountPosterPreview();
-      }
+      showFlowStep("pay");
     } finally {
-      payPanelTransitioning = false;
+      panelTransitioning = false;
     }
   }
 
@@ -251,11 +347,13 @@
     clearPosterPreview();
     hidePendingBanner();
     form.reset();
+    if (namesForm) namesForm.reset();
+    if (namesFields) namesFields.innerHTML = "";
     if (payBtn) {
       payBtn.disabled = false;
       payBtn.textContent = "Jetzt bezahlen";
     }
-    showPanel(panelForm);
+    showFlowStep("form");
   }
 
   function stopPolling() {
@@ -311,6 +409,10 @@
 
     if (data.status === "ready") {
       stopPolling();
+      if (data.namesConfirmed === false) {
+        await showReviewPanel(data.participants || []);
+        return;
+      }
       setProgress(92, "Fast fertig — Vorschau wird vorbereitet …");
       await showPayPanel();
       return;
@@ -322,12 +424,16 @@
         errorText.textContent =
           data.errorMessage || "Die ZIP konnte nicht verarbeitet werden.";
       }
-      showPanel(panelError);
+      showFlowStep("error");
       return;
     }
 
     if (data.status === "checkout" || data.status === "paid" || data.status === "delivered") {
       stopPolling();
+      if (data.namesConfirmed === false) {
+        await showReviewPanel(data.participants || []);
+        return;
+      }
       await showPayPanel();
     }
   }
@@ -337,18 +443,18 @@
     currentOrderId = orderId;
     storeOrderId(orderId);
     hidePendingBanner();
-    showPanel(panelProgress);
+    showFlowStep("progress");
     setProgress(12, "Upload erfolgreich — Verarbeitung läuft …");
     pollStatus(orderId).catch((err) => {
       stopPolling();
       if (errorText) errorText.textContent = friendlyFetchError(err);
-      showPanel(panelError);
+      showFlowStep("error");
     });
     pollTimer = setInterval(() => {
       pollStatus(orderId).catch((err) => {
         stopPolling();
         if (errorText) errorText.textContent = friendlyFetchError(err);
-        showPanel(panelError);
+        showFlowStep("error");
       });
     }, POLL_MS);
   }
@@ -382,7 +488,7 @@
       payBtn.disabled = false;
       payBtn.textContent = "Jetzt bezahlen";
       if (errorText) errorText.textContent = friendlyFetchError(err);
-      showPanel(panelError);
+      showFlowStep("error");
     }
   }
 
@@ -414,7 +520,7 @@
       startPolling(data.orderId);
     } catch (err) {
       if (errorText) errorText.textContent = friendlyFetchError(err);
-      showPanel(panelError);
+      showFlowStep("error");
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -424,6 +530,44 @@
   });
 
   if (payBtn) payBtn.addEventListener("click", startCheckout);
+
+  if (namesForm) {
+    namesForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!currentOrderId) return;
+
+      if (namesSubmitBtn) {
+        namesSubmitBtn.disabled = true;
+        namesSubmitBtn.textContent = "Wird übernommen …";
+      }
+
+      showFlowStep("progress");
+      setProgress(18, "Poster wird mit euren Namen erstellt …");
+
+      try {
+        await apiFetch(
+          `/api/orders/${encodeURIComponent(currentOrderId)}/participant-names`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ names: collectParticipantNames() }),
+          }
+        );
+
+        clearPosterPreview();
+        setProgress(88, "Finale Vorschau wird geladen …");
+        await showPayPanel();
+      } catch (err) {
+        if (errorText) errorText.textContent = friendlyFetchError(err);
+        showFlowStep("error");
+      } finally {
+        if (namesSubmitBtn) {
+          namesSubmitBtn.disabled = false;
+          namesSubmitBtn.textContent = "Namen übernehmen & weiter";
+        }
+      }
+    });
+  }
 
   if (posterImage) {
     posterImage.addEventListener("contextmenu", (event) => event.preventDefault());
@@ -450,10 +594,14 @@
       const data = await apiFetch(`/api/orders/${encodeURIComponent(orderId)}/status`);
 
       if (data.status === "ready" || data.status === "checkout") {
+        if (data.namesConfirmed === false) {
+          await showReviewPanel(data.participants || []);
+          return;
+        }
         if (allowPayPanel) {
           await showPayPanel();
         } else {
-          showPanel(panelForm);
+          showFlowStep("form");
           showPendingBanner();
         }
         return;
@@ -466,15 +614,15 @@
 
       if (data.status === "error") {
         if (errorText) errorText.textContent = data.errorMessage || "Fehler";
-        showPanel(panelError);
+        showFlowStep("error");
         return;
       }
 
       clearStoredOrder();
-      showPanel(panelForm);
+      showFlowStep("form");
     } catch {
       clearStoredOrder();
-      showPanel(panelForm);
+      showFlowStep("form");
     }
   }
 

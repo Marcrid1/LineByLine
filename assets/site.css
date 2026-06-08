@@ -429,6 +429,50 @@ main > .section-alt:last-child {
   color: var(--muted);
 }
 
+.order-name-detected {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.order-name-detected strong {
+  color: var(--warm);
+  font-weight: 600;
+}
+
+.order-name-row {
+  gap: 0.35rem;
+}
+
+#order-names-fields {
+  display: grid;
+  gap: 1.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.order-name-label {
+  margin-bottom: 0;
+}
+
+.order-name-source {
+  margin: 0 0 0.35rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.order-name-input::placeholder {
+  color: rgba(92, 74, 66, 0.42);
+  opacity: 1;
+}
+
+.order-name-input::-webkit-input-placeholder {
+  color: rgba(92, 74, 66, 0.42);
+}
+
+.order-name-input:focus::placeholder {
+  color: rgba(92, 74, 66, 0.28);
+}
+
 .order-submit {
   width: 100%;
   margin-top: 0.35rem;
@@ -488,6 +532,23 @@ main > .section-alt:last-child {
   width: 100%;
 }
 
+.order-review-block {
+  margin-bottom: 1rem;
+}
+
+.order-review-block .order-poster-preview {
+  margin-bottom: 0;
+}
+
+.order-pay-lead {
+  margin-top: -0.35rem;
+}
+
+#order-panel-pay {
+  overflow-x: hidden;
+  padding-top: 0.5rem;
+}
+
 .order-poster-preview-shell {
   position: relative;
   width: 100%;
@@ -528,8 +589,29 @@ main > .section-alt:last-child {
   -webkit-user-drag: none;
 }
 
-#order-panel-pay {
-  overflow-x: hidden;
+.order-review-block + #order-panel-names,
+.order-review-block + #order-panel-pay {
+  margin-top: 0;
+}
+
+.order-review-block + #order-panel-names {
+  padding-top: 0.25rem;
+  border-top: none;
+  box-shadow: none;
+  background: transparent;
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.order-review-block + #order-panel-pay {
+  padding-top: 0.25rem;
+  border-top: none;
+  box-shadow: none;
+  background: transparent;
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .order-pending-banner {

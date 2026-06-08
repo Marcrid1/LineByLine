@@ -199,8 +199,7 @@
               <p class="order-hint">Das kann einige Minuten dauern. Bitte Tab offen lassen.</p>
             </div>
 
-            <div id="order-panel-pay" class="order-panel" hidden>
-              <p class="order-panel-title">Poster ist fertig!</p>
+            <div id="order-review-block" class="order-review-block" hidden>
               <div class="order-poster-preview" id="order-poster-preview" hidden>
                 <div class="order-poster-preview-shell">
                   <div class="order-poster-preview-frame">
@@ -214,6 +213,27 @@
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div id="order-panel-names" class="order-panel" hidden>
+              <p class="order-panel-title">Euer Poster-Entwurf</p>
+              <p class="order-panel-text">
+                So sieht euer Poster aus. Passt die Anzeigenamen an — sie
+                erscheinen überall auf dem finalen Poster.
+              </p>
+              <form class="order-form" id="order-names-form">
+                <div id="order-names-fields"></div>
+                <button class="btn btn-primary order-submit" type="submit" id="order-names-submit">
+                  Namen übernehmen &amp; weiter
+                </button>
+              </form>
+            </div>
+
+            <div id="order-panel-pay" class="order-panel" hidden>
+              <p class="order-panel-title">Poster ist fertig!</p>
+              <p class="order-panel-text order-pay-lead">
+                Gefällt euch die Vorschau? Dann geht es sicher zur Bezahlung.
+              </p>
               <button class="btn btn-primary order-submit" type="button" id="order-pay-btn">
                 Jetzt bezahlen
               </button>
