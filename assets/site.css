@@ -121,14 +121,6 @@ h3,
   color: var(--rose-deep);
 }
 
-.hide-narrow {
-  display: inline;
-}
-
-.show-narrow {
-  display: none;
-}
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -1133,14 +1125,6 @@ main > .section-alt:last-child {
 @media (max-width: 600px) {
   .container {
     width: min(100% - 1.15rem, var(--max));
-  }
-
-  .hide-narrow {
-    display: none !important;
-  }
-
-  .show-narrow {
-    display: inline !important;
   }
 
   .site-header .inner {
