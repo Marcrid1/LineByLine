@@ -1,20 +1,3 @@
-# ── Private Engine (lokal, nicht öffentlich) ──
-app/
-server/
-.env
-server/.env
-
-# Kundendaten & Chat-Exports
-Input/
-input/
-Output/
-*.zip
-
-# Build & Dependencies
-node_modules/
-package.json
-package-lock.json
-
 # OS & Editor
 .DS_Store
 Thumbs.db
