@@ -143,34 +143,11 @@
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
 
-      (function () {
-
-        var host = window.location.hostname;
-
-        var port = window.location.port;
-
-        var apiBase;
-
-        if (port === "8787" || port === String(8787)) {
-
-          apiBase = window.location.origin;
-
-        } else if (host === "localhost" || host === "127.0.0.1") {
-
-          apiBase = "http://127.0.0.1:8787";
-
-        } else {
-
-          apiBase = "https://glowing-duty-unplug.ngrok-free.dev";
-
-        }
-
-        window.LINES_BY_LINES_CONFIG = { apiBase: apiBase };
-
-      })();
+      // API-URL: siehe assets/api-config.js
 
     </script>
 
+    <script src="./assets/api-config.js"></script>
     <script src="./assets/cookie-consent.js" defer></script>
 
     <script src="./assets/success.js" defer></script>

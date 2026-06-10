@@ -294,21 +294,9 @@
         }
       })();
 
-      // API-URL: lokal automatisch, live ngrok/VPS (siehe assets/order.js)
-      (function () {
-        var host = window.location.hostname;
-        var port = window.location.port;
-        var apiBase;
-        if (port === "8787" || port === String(8787)) {
-          apiBase = window.location.origin;
-        } else if (host === "localhost" || host === "127.0.0.1") {
-          apiBase = "http://127.0.0.1:8787";
-        } else {
-          apiBase = "https://91.99.92.9.nip.io";
-        }
-        window.LINES_BY_LINES_CONFIG = { apiBase: apiBase };
-      })();
+      // API-URL: siehe assets/api-config.js
     </script>
+    <script src="./assets/api-config.js"></script>
     <script src="./assets/cookie-consent.js" defer></script>
     <script src="./assets/order.js" defer></script>
   </body>
