@@ -26,6 +26,9 @@
   const newOrderBtn = document.getElementById("order-new-order-btn");
   const newFromPayBtn = document.getElementById("order-new-from-pay-btn");
   const apiWarning = document.getElementById("order-api-warning");
+  const consentChatUpload = document.getElementById("consentChatUpload");
+  const consentAgbWiderruf = document.getElementById("consentAgbWiderruf");
+  const payConsentError = document.getElementById("order-pay-consent-error");
 
   function apiHeaders() {
     const headers = {};
@@ -353,6 +356,8 @@
       payBtn.disabled = false;
       payBtn.textContent = "Jetzt bezahlen";
     }
+    if (consentAgbWiderruf) consentAgbWiderruf.checked = false;
+    if (payConsentError) payConsentError.hidden = true;
     showFlowStep("form");
   }
 
@@ -467,6 +472,12 @@
 
   async function startCheckout() {
     if (!currentOrderId) return;
+    if (!consentAgbWiderruf?.checked) {
+      if (payConsentError) payConsentError.hidden = false;
+      consentAgbWiderruf?.focus();
+      return;
+    }
+    if (payConsentError) payConsentError.hidden = true;
     payBtn.disabled = true;
     payBtn.textContent = "Weiterleitung …";
 
@@ -476,7 +487,10 @@
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ siteBase: siteBaseUrl() }),
+          body: JSON.stringify({
+            siteBase: siteBaseUrl(),
+            consentAgbWiderruf: true,
+          }),
         }
       );
       if (data.url) {
@@ -494,6 +508,7 @@
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (!form.reportValidity()) return;
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -530,6 +545,14 @@
   });
 
   if (payBtn) payBtn.addEventListener("click", startCheckout);
+
+  if (consentAgbWiderruf) {
+    consentAgbWiderruf.addEventListener("change", () => {
+      if (consentAgbWiderruf.checked && payConsentError) {
+        payConsentError.hidden = true;
+      }
+    });
+  }
 
   if (namesForm) {
     namesForm.addEventListener("submit", async (event) => {

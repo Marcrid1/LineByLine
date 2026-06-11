@@ -183,6 +183,27 @@
                   />
                   <span class="order-hint">Max. 10 MB · nur .zip</span>
                 </div>
+                <div class="order-form-row order-consent-block">
+                  <p class="order-consent-note">
+                    Mit dem Upload werden die in unserer
+                    <a href="./datenschutz.html" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>
+                    beschriebenen Daten verarbeitet, um euer Poster zu erstellen.
+                  </p>
+                  <label class="order-consent">
+                    <input
+                      type="checkbox"
+                      id="consentChatUpload"
+                      name="consentChatUpload"
+                      value="1"
+                      required
+                    />
+                    <span>
+                      Ich bestätige, dass ich berechtigt bin, diesen Chat-Export zu
+                      nutzen, und dass alle beteiligten Personen damit einverstanden
+                      sind (bzw. ich alleiniger Chat-Teilnehmer bin).
+                    </span>
+                  </label>
+                </div>
                 <button class="btn btn-primary order-submit" type="submit">
                   Poster erstellen
                 </button>
@@ -235,6 +256,21 @@
               <p class="order-panel-text order-pay-lead">
                 Gefällt euch die Vorschau? Dann geht es sicher zur Bezahlung.
               </p>
+              <div class="order-consent-block order-consent-block-pay">
+                <label class="order-consent">
+                  <input type="checkbox" id="consentAgbWiderruf" value="1" />
+                  <span>
+                    Ich habe die
+                    <a href="./agb.html" target="_blank" rel="noopener noreferrer">AGB</a>
+                    und die
+                    <a href="./widerruf.html" target="_blank" rel="noopener noreferrer">Widerrufsbelehrung</a>
+                    zur Kenntnis genommen.
+                  </span>
+                </label>
+                <p class="order-consent-error" id="order-pay-consent-error" hidden>
+                  Bitte bestätigt die Kenntnisnahme von AGB und Widerrufsbelehrung.
+                </p>
+              </div>
               <button class="btn btn-primary order-submit" type="button" id="order-pay-btn">
                 Jetzt bezahlen
               </button>
