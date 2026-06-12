@@ -5,15 +5,19 @@
   const POLL_MS = 2500;
 
   const form = document.getElementById("order-form");
+  const uploadShell = document.getElementById("order-upload-shell");
   const panelForm = document.getElementById("order-panel-form");
   const panelProgress = document.getElementById("order-panel-progress");
   const panelError = document.getElementById("order-panel-error");
   const panelNames = document.getElementById("order-panel-names");
-  const panelPay = document.getElementById("order-panel-pay");
   const reviewBlock = document.getElementById("order-review-block");
   const namesForm = document.getElementById("order-names-form");
   const namesFields = document.getElementById("order-names-fields");
-  const namesSubmitBtn = document.getElementById("order-names-submit");
+  const namesRenameBlock = document.getElementById("order-names-rename-block");
+  const renameTeaser = document.getElementById("order-rename-teaser");
+  const renameDetectedEl = document.getElementById("order-rename-detected");
+  const startRenameBtn = document.getElementById("order-start-rename-btn");
+  const regenerateBtn = document.getElementById("order-names-regenerate-btn");
   const progressBar = document.getElementById("order-progress-bar");
   const progressLabel = document.getElementById("order-progress-label");
   const errorText = document.getElementById("order-error-text");
@@ -50,23 +54,55 @@
   let currentOrderId = "";
   let pollTimer = null;
   let panelTransitioning = false;
+  let cachedParticipants = null;
 
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  function setUploadUiVisible(visible) {
+    if (uploadShell) uploadShell.hidden = !visible;
+    if (panelForm) panelForm.hidden = !visible;
+  }
+
   function showFlowStep(step) {
-    if (panelForm) panelForm.hidden = step !== "form";
+    const showUpload = step === "form";
+    setUploadUiVisible(showUpload);
+    if (pendingBanner) pendingBanner.hidden = step !== "pending";
     if (panelProgress) panelProgress.hidden = step !== "progress";
     if (panelError) panelError.hidden = step !== "error";
     if (panelNames) panelNames.hidden = step !== "review";
-    if (panelPay) panelPay.hidden = step !== "pay";
-    if (reviewBlock) reviewBlock.hidden = step !== "review" && step !== "pay";
+    if (reviewBlock) reviewBlock.hidden = step !== "review";
   }
 
   function personLabel(index) {
     const labels = ["Erste Person", "Zweite Person", "Dritte Person", "Vierte Person"];
     return labels[index] || `${index + 1}. Person`;
+  }
+
+  function updateRenameDetected(participants) {
+    if (!renameDetectedEl) return;
+
+    const names = (participants || [])
+      .map((participant) => String(participant.original || "").trim())
+      .filter(Boolean);
+
+    renameDetectedEl.replaceChildren();
+    if (!names.length) {
+      renameDetectedEl.hidden = true;
+      return;
+    }
+
+    renameDetectedEl.hidden = false;
+    renameDetectedEl.append("Aktuell erkannt: ");
+    names.forEach((name, index) => {
+      if (index > 0) {
+        renameDetectedEl.append(index === names.length - 1 ? " und " : ", ");
+      }
+      const strong = document.createElement("strong");
+      strong.textContent = name;
+      renameDetectedEl.appendChild(strong);
+    });
   }
 
   function renderParticipantFields(participants) {
@@ -101,9 +137,12 @@
       input.dataset.original = original;
       input.setAttribute("aria-label", `Anzeigename für ${original}`);
 
+      input.addEventListener("input", updateRegenerateButton);
+
       row.append(label, detected, input);
       namesFields.appendChild(row);
     });
+    updateRegenerateButton();
   }
 
   function collectParticipantNames() {
@@ -113,6 +152,64 @@
       if (typed) return typed;
       return String(input.dataset.original || input.placeholder || "").trim();
     });
+  }
+
+  function participantNamesUnchanged() {
+    if (!namesFields) return true;
+    return Array.from(namesFields.querySelectorAll("input.order-name-input")).every((input) => {
+      const typed = String(input.value || "").trim();
+      const original = String(input.dataset.original || input.placeholder || "").trim();
+      return !typed || typed === original;
+    });
+  }
+
+  function updateRegenerateButton() {
+    if (!regenerateBtn) return;
+    const canRegenerate = !participantNamesUnchanged();
+    regenerateBtn.disabled = !canRegenerate;
+  }
+
+  function closeNamesRename() {
+    if (namesRenameBlock) namesRenameBlock.hidden = true;
+    if (renameTeaser) renameTeaser.hidden = false;
+    if (startRenameBtn) {
+      startRenameBtn.setAttribute("aria-expanded", "false");
+    }
+    if (namesFields) namesFields.innerHTML = "";
+    if (regenerateBtn) {
+      regenerateBtn.disabled = true;
+      regenerateBtn.textContent = "Neu generieren";
+    }
+  }
+
+  async function openNamesRename() {
+    if (!currentOrderId) return;
+
+    try {
+      let participants = cachedParticipants;
+      if (!participants || !participants.length) {
+        participants = await refreshParticipantsCache();
+      }
+      renderParticipantFields(participants);
+      if (namesRenameBlock) namesRenameBlock.hidden = false;
+      if (renameTeaser) renameTeaser.hidden = true;
+      if (startRenameBtn) {
+        startRenameBtn.setAttribute("aria-expanded", "true");
+      }
+      const firstInput = namesFields?.querySelector("input.order-name-input");
+      if (firstInput) firstInput.focus();
+    } catch (err) {
+      if (errorText) errorText.textContent = friendlyFetchError(err);
+      showFlowStep("error");
+    }
+  }
+
+  async function refreshParticipantsCache() {
+    if (!currentOrderId) return [];
+    const data = await apiFetch(`/api/orders/${encodeURIComponent(currentOrderId)}/status`);
+    cachedParticipants = data.participants || [];
+    updateRenameDetected(cachedParticipants);
+    return cachedParticipants;
   }
 
   function setProgress(percent, label) {
@@ -262,11 +359,13 @@
   }
 
   function hidePendingBanner() {
-    if (pendingBanner) pendingBanner.hidden = true;
+    if (pendingBanner && !pendingBanner.hidden) {
+      pendingBanner.hidden = true;
+    }
   }
 
   function showPendingBanner() {
-    if (pendingBanner) pendingBanner.hidden = false;
+    showFlowStep("pending");
   }
 
   async function finishProgressThen(step, label) {
@@ -281,7 +380,9 @@
 
     try {
       hidePendingBanner();
-      renderParticipantFields(participants);
+      closeNamesRename();
+      cachedParticipants = participants || null;
+      updateRenameDetected(cachedParticipants);
 
       const onProgress = panelProgress && !panelProgress.hidden;
       if (onProgress) {
@@ -297,47 +398,7 @@
       } else {
         showFlowStep("review");
       }
-    } finally {
-      panelTransitioning = false;
-    }
-  }
-
-  async function showPayPanel() {
-    if (panelTransitioning) return;
-    panelTransitioning = true;
-
-    try {
-      hidePendingBanner();
-
-      const onProgress = panelProgress && !panelProgress.hidden;
-      const previewReady =
-        posterPreview &&
-        !posterPreview.hidden &&
-        posterImage &&
-        posterImage.src &&
-        posterImage.naturalWidth > 0;
-
-      if (onProgress || (currentOrderId && !previewReady)) {
-        if (onProgress) {
-          setProgress(94, "Vorschau wird geladen …");
-        }
-
-        if (currentOrderId && !previewReady) {
-          await loadAndMountPreview(currentOrderId);
-        }
-
-        if (onProgress) {
-          await finishProgressThen("pay");
-        } else {
-          showFlowStep("pay");
-          if (previewBlob && !previewReady) {
-            await mountPosterPreview();
-          }
-        }
-        return;
-      }
-
-      showFlowStep("pay");
+      refreshParticipantsCache().catch(() => {});
     } finally {
       panelTransitioning = false;
     }
@@ -346,12 +407,14 @@
   function resetToNewOrder() {
     stopPolling();
     currentOrderId = "";
+    cachedParticipants = null;
+    updateRenameDetected(null);
     clearStoredOrder();
     clearPosterPreview();
     hidePendingBanner();
     form.reset();
     if (namesForm) namesForm.reset();
-    if (namesFields) namesFields.innerHTML = "";
+    closeNamesRename();
     if (payBtn) {
       payBtn.disabled = false;
       payBtn.textContent = "Jetzt bezahlen";
@@ -414,12 +477,8 @@
 
     if (data.status === "ready") {
       stopPolling();
-      if (data.namesConfirmed === false) {
-        await showReviewPanel(data.participants || []);
-        return;
-      }
       setProgress(92, "Fast fertig — Vorschau wird vorbereitet …");
-      await showPayPanel();
+      await showReviewPanel(data.participants || []);
       return;
     }
 
@@ -435,11 +494,7 @@
 
     if (data.status === "checkout" || data.status === "paid" || data.status === "delivered") {
       stopPolling();
-      if (data.namesConfirmed === false) {
-        await showReviewPanel(data.participants || []);
-        return;
-      }
-      await showPayPanel();
+      await showReviewPanel(data.participants || []);
     }
   }
 
@@ -554,41 +609,56 @@
     });
   }
 
+  async function regeneratePosterNames() {
+    if (!currentOrderId || participantNamesUnchanged()) return;
+
+    const names = collectParticipantNames();
+
+    if (regenerateBtn) {
+      regenerateBtn.disabled = true;
+      regenerateBtn.textContent = "Wird generiert …";
+    }
+
+    showFlowStep("progress");
+    setProgress(18, "Poster wird mit euren Namen erstellt …");
+
+    try {
+      await apiFetch(
+        `/api/orders/${encodeURIComponent(currentOrderId)}/participant-names`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ names }),
+        }
+      );
+
+      clearPosterPreview();
+      setProgress(88, "Vorschau wird aktualisiert …");
+      await loadAndMountPreview(currentOrderId);
+      await refreshParticipantsCache();
+      showFlowStep("review");
+      closeNamesRename();
+    } catch (err) {
+      if (errorText) errorText.textContent = friendlyFetchError(err);
+      showFlowStep("error");
+    } finally {
+      if (regenerateBtn) {
+        regenerateBtn.textContent = "Neu generieren";
+        updateRegenerateButton();
+      }
+    }
+  }
+
   if (namesForm) {
     namesForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      if (!currentOrderId) return;
+      await regeneratePosterNames();
+    });
+  }
 
-      if (namesSubmitBtn) {
-        namesSubmitBtn.disabled = true;
-        namesSubmitBtn.textContent = "Wird übernommen …";
-      }
-
-      showFlowStep("progress");
-      setProgress(18, "Poster wird mit euren Namen erstellt …");
-
-      try {
-        await apiFetch(
-          `/api/orders/${encodeURIComponent(currentOrderId)}/participant-names`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ names: collectParticipantNames() }),
-          }
-        );
-
-        clearPosterPreview();
-        setProgress(88, "Finale Vorschau wird geladen …");
-        await showPayPanel();
-      } catch (err) {
-        if (errorText) errorText.textContent = friendlyFetchError(err);
-        showFlowStep("error");
-      } finally {
-        if (namesSubmitBtn) {
-          namesSubmitBtn.disabled = false;
-          namesSubmitBtn.textContent = "Namen übernehmen & weiter";
-        }
-      }
+  if (startRenameBtn) {
+    startRenameBtn.addEventListener("click", () => {
+      openNamesRename().catch(() => {});
     });
   }
 
@@ -597,8 +667,16 @@
   }
 
   if (continuePayBtn) {
-    continuePayBtn.addEventListener("click", () => {
-      if (currentOrderId) showPayPanel().catch(() => {});
+    continuePayBtn.addEventListener("click", async () => {
+      if (!currentOrderId) return;
+      try {
+        const data = await apiFetch(
+          `/api/orders/${encodeURIComponent(currentOrderId)}/status`
+        );
+        await showReviewPanel(data.participants || []);
+      } catch {
+        // ignore
+      }
     });
   }
 
@@ -610,21 +688,16 @@
   }
 
   async function resumeOrderById(orderId, options) {
-    const allowPayPanel = Boolean(options && options.allowPayPanel);
+    const openReview = Boolean(options && options.openReview);
     currentOrderId = orderId;
 
     try {
       const data = await apiFetch(`/api/orders/${encodeURIComponent(orderId)}/status`);
 
       if (data.status === "ready" || data.status === "checkout") {
-        if (data.namesConfirmed === false) {
+        if (openReview) {
           await showReviewPanel(data.participants || []);
-          return;
-        }
-        if (allowPayPanel) {
-          await showPayPanel();
         } else {
-          showFlowStep("form");
           showPendingBanner();
         }
         return;
@@ -653,12 +726,12 @@
   const orderFromUrl = params.get("order");
 
   if (orderFromUrl) {
-    resumeOrderById(orderFromUrl, { allowPayPanel: true });
+    resumeOrderById(orderFromUrl, { openReview: true });
   } else {
     try {
       const saved = sessionStorage.getItem("linesByLinesOrderId");
       if (saved) {
-        resumeOrderById(saved, { allowPayPanel: false });
+        resumeOrderById(saved, { openReview: false });
       }
     } catch {
       // ignore

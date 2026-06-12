@@ -111,12 +111,14 @@
 
       <section class="section section-alt order-section" id="bestellen">
         <div class="container">
-          <span class="eyebrow">Schritt 2 von 2</span>
-          <h2 class="section-title">Jetzt bestellen</h2>
-          <p class="section-intro">
-            ZIP hochladen, Poster wird erstellt — danach bezahlt ihr sicher über
-            Stripe und erhaltet das PDF per E-Mail.
-          </p>
+          <div id="order-upload-shell">
+            <span class="eyebrow">Schritt 2 von 2</span>
+            <h2 class="section-title">Jetzt bestellen</h2>
+            <p class="section-intro">
+              ZIP hochladen, Poster wird erstellt — danach bezahlt ihr sicher über
+              Stripe und erhaltet das PDF per E-Mail.
+            </p>
+          </div>
 
           <p class="order-api-warning" id="order-api-warning" hidden></p>
 
@@ -240,22 +242,40 @@
             <div id="order-panel-names" class="order-panel" hidden>
               <p class="order-panel-title">Euer Poster-Entwurf</p>
               <p class="order-panel-text">
-                So sieht euer Poster aus. Passt die Anzeigenamen an — sie
-                erscheinen überall auf dem finalen Poster.
+                So sieht euer Poster aus. Passt alles? Danach könnt ihr sicher
+                bezahlen.
               </p>
-              <form class="order-form" id="order-names-form">
-                <div id="order-names-fields"></div>
-                <button class="btn btn-primary order-submit" type="submit" id="order-names-submit">
-                  Namen übernehmen &amp; weiter
-                </button>
-              </form>
-            </div>
-
-            <div id="order-panel-pay" class="order-panel" hidden>
-              <p class="order-panel-title">Poster ist fertig!</p>
-              <p class="order-panel-text order-pay-lead">
-                Gefällt euch die Vorschau? Dann geht es sicher zur Bezahlung.
-              </p>
+              <div class="order-rename-teaser" id="order-rename-teaser">
+                <div class="order-rename-teaser-intro" id="order-rename-teaser-intro">
+                  <p class="order-rename-teaser-lead">
+                    Namensänderung möglich — die Anzeigenamen auf dem Poster
+                    könnt ihr vor dem Bezahlen anpassen.
+                  </p>
+                  <p class="order-name-detected" id="order-rename-detected" hidden></p>
+                  <button
+                    class="btn btn-secondary order-rename-toggle"
+                    type="button"
+                    id="order-start-rename-btn"
+                    aria-expanded="false"
+                    aria-controls="order-names-rename-block"
+                  >
+                    Anzeigenamen anpassen
+                  </button>
+                </div>
+              </div>
+              <div class="order-names-rename-block" id="order-names-rename-block" hidden>
+                <form class="order-form order-names-rename-form" id="order-names-form">
+                  <div id="order-names-fields"></div>
+                  <button
+                    class="btn btn-secondary order-submit"
+                    type="submit"
+                    id="order-names-regenerate-btn"
+                    disabled
+                  >
+                    Neu generieren
+                  </button>
+                </form>
+              </div>
               <div class="order-consent-block order-consent-block-pay">
                 <label class="order-consent">
                   <input type="checkbox" id="consentAgbWiderruf" value="1" />
