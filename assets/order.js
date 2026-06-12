@@ -423,7 +423,7 @@
       return;
     }
 
-    if (data.status === "error") {
+    if (data.status === "error" || data.status === "insufficient_content") {
       stopPolling();
       if (errorText) {
         errorText.textContent =
@@ -635,7 +635,7 @@
         return;
       }
 
-      if (data.status === "error") {
+      if (data.status === "error" || data.status === "insufficient_content") {
         if (errorText) errorText.textContent = data.errorMessage || "Fehler";
         showFlowStep("error");
         return;
